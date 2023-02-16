@@ -1,24 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEditor.PlayerSettings;
 
 public class WebglRaycast : MonoBehaviour
 {
     Camera cam;
+   
 
     // Start is called before the first frame update
     void Start()
     {
-        cam= Camera.main;
+        cam = GetComponent<Camera>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //draw ray
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 10f;
-        mousePos= cam.ScreenToViewportPoint(mousePos);
-        Debug.DrawRay(transform.position, mousePos,Color.blue);
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Debug.DrawRay(ray.origin, ray.direction * 90, Color.blue);
     }
 }
