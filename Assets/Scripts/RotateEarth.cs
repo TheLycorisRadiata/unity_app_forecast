@@ -1,19 +1,18 @@
-using System;
 using UnityEngine;
 
 public class RotateEarth : MonoBehaviour
 {
     [SerializeField] private UserInput input;
-    [SerializeField] private float rotateSpeed = 15f;
+
+    private float rotateSpeed = 15f;
+    private float yaw; // rotation around Y
+    private float pitch; // rotation around X
 
     void FixedUpdate()
     {
-        float horizontalInput = -input.movementVector.x * rotateSpeed * Time.deltaTime;
-        float verticalInput = input.movementVector.y * rotateSpeed * Time.deltaTime;
+        yaw += input.movementVector.y * rotateSpeed * Time.deltaTime;
+        pitch += -input.movementVector.x * rotateSpeed * Time.deltaTime;
 
-        bool horIsStronger = Math.Abs(horizontalInput) > Math.Abs(verticalInput);
-        Vector3 newEulerAngles = horIsStronger ? new Vector3(0f, horizontalInput, 0f) : new Vector3(verticalInput, 0f, 0f);
-        
-        transform.Rotate(newEulerAngles, Space.World);
+        transform.localRotation = Quaternion.Euler(yaw, pitch, 0f);
     }
 }
