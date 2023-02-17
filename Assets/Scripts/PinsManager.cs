@@ -11,6 +11,7 @@ public class PinsManager : MonoBehaviour
     public Transform parent;
     private GameObject pins;
     private bool IsPinned;
+    private Quaternion pinsRotation; 
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +27,13 @@ public class PinsManager : MonoBehaviour
     }
 
     public void PinsWithRaycast()
-    {       
+    {
         pinsPosition = webglRaycast.RaycastPoint;
+        pinsRotation = webglRaycast.RaycastRotation;
 
         if (IsPinned == false)
         {
-            pins = Instantiate(pinsPrefab, pinsPosition, Quaternion.identity, parent);
+            pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
             pins.SetActive(true);
             IsPinned = true;
         }
@@ -39,6 +41,7 @@ public class PinsManager : MonoBehaviour
         {
             pins.SetActive(false);
             pins.transform.position = pinsPosition;
+            pins.transform.rotation = pinsRotation;
             pins.SetActive(true);
         }
         

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEditor.PlayerSettings;
@@ -7,7 +8,8 @@ using static UnityEditor.PlayerSettings;
 public class WebglRaycast : MonoBehaviour
 {
 
-    [SerializeField] public Vector3 RaycastPoint = Vector3.zero;
+    [SerializeField] public Vector3 RaycastPoint;
+    [SerializeField] public Quaternion RaycastRotation; 
     Camera cam;
    
 
@@ -28,7 +30,10 @@ public class WebglRaycast : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
+        {
             //Debug.Log(hit.point);
             RaycastPoint = hit.point;
+            RaycastRotation =  Quaternion.FromToRotation(Vector3.up, hit.normal);
+        }
     }
 }
