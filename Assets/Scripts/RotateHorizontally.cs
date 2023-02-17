@@ -5,7 +5,7 @@ public class RotateHorizontally : MonoBehaviour
     [SerializeField] private UserInput input;
 
     private float rotateSpeed = 15f;
-    private float pitch; // rotation around X
+    public float pitch; // rotation around X
 
     void FixedUpdate()
     {

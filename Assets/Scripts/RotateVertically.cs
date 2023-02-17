@@ -5,7 +5,7 @@ public class RotateVertically : MonoBehaviour
     [SerializeField] private UserInput input;
 
     private float rotateSpeed = 15f;
-    private float yaw; // rotation around Y
+    public float yaw; // rotation around Y
 
     void FixedUpdate()
     {
