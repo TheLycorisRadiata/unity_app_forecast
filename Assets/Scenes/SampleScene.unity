@@ -259,7 +259,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 20.78461
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -268,7 +268,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -343,10 +343,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbceed7d7f87f344097777d7cc052570, type: 3}
+  m_Script: {fileID: 11500000, guid: c743fba5ee645ef4d9fe3bd2c3e9c2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
+  RaycastPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,9 +653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementVector: {x: 0, y: 0}
-  scroll: 0
   click: 0
-  cancel: 0
 --- !u!114 &1934136700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,38 +756,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 49ab1cf1-ce4a-4692-aeea-456de6cb2144
     m_ActionName: UI/TrackedDeviceOrientation
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1934136699}
-        m_TargetAssemblyTypeName: UserInput, Assembly-CSharp
-        m_MethodName: OnScroll
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 6fd3ffe7-0012-424b-8ec4-129ed215be57
-    m_ActionName: Player/New action
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1934136699}
-        m_TargetAssemblyTypeName: UserInput, Assembly-CSharp
-        m_MethodName: OnCancel
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 94c075b6-0973-4830-b57e-2c3bfb12c3df
-    m_ActionName: Player/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -821,6 +787,7 @@ GameObject:
   - component: {fileID: 543450653683642245}
   - component: {fileID: 3469287837533954080}
   - component: {fileID: 1711813855620601066}
+  - component: {fileID: 3469287837533954081}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -878,3 +845,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149212525887}
   m_Mesh: {fileID: 4711208715938537054, guid: c49ad153c7632172f9e7cb52c46d1881, type: 3}
+--- !u!135 &3469287837533954081
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149212525887}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 9.5
+  m_Center: {x: 0, y: 0, z: 0}
