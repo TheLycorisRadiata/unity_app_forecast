@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Zoom : MonoBehaviour
@@ -19,9 +18,7 @@ public class Zoom : MonoBehaviour
 
     void LateUpdate()
     {
-        float newPosZ = transform.position.z + input.scroll * stepPosZ;
-
-        if (newPosZ >= minPosZ && newPosZ <= maxPosZ)
-            transform.position = new Vector3(transform.position.x, transform.position.y, newPosZ);
+        float newPosZ = Mathf.Clamp(transform.position.z + input.scroll * stepPosZ, minPosZ, maxPosZ);
+        transform.position = new Vector3(transform.position.x, transform.position.y, newPosZ);
     }
 }
