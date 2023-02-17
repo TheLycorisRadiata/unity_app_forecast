@@ -7,7 +7,7 @@ public class UserInput : MonoBehaviour
 {
     public Vector2 movementVector;
     public float scroll;
-    public bool click;
+    public bool click, cancel;
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
@@ -30,5 +30,10 @@ public class UserInput : MonoBehaviour
     public void OnFire(InputAction.CallbackContext ctx)
     {
         click = ctx.canceled ? false : true;
+    }
+
+    public void OnCancel(InputAction.CallbackContext ctx)
+    {
+        cancel = ctx.canceled ? false : true;
     }
 }

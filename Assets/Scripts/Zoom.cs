@@ -20,5 +20,8 @@ public class Zoom : MonoBehaviour
     {
         float newPosZ = Mathf.Clamp(transform.position.z + input.scroll * stepPosZ, minPosZ, maxPosZ);
         transform.position = new Vector3(transform.position.x, transform.position.y, newPosZ);
+
+        if (input.cancel)
+            transform.position = new Vector3(transform.position.x, transform.position.y, defaultPosZ);
     }
 }
