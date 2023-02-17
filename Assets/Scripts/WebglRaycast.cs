@@ -7,7 +7,7 @@ using static UnityEditor.PlayerSettings;
 public class WebglRaycast : MonoBehaviour
 {
 
-    [SerializeField] Vector3 RaycastPoint = Vector3.zero;
+    [SerializeField] public Vector3 RaycastPoint = Vector3.zero;
     Camera cam;
    
 
