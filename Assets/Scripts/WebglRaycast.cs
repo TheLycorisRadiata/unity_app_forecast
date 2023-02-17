@@ -6,6 +6,8 @@ using static UnityEditor.PlayerSettings;
 
 public class WebglRaycast : MonoBehaviour
 {
+
+    [SerializeField] Vector3 RaycastPoint = Vector3.zero;
     Camera cam;
    
 
@@ -16,10 +18,17 @@ public class WebglRaycast : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+
         //draw ray
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
         Debug.DrawRay(ray.origin, ray.direction * 90, Color.blue);
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+            //Debug.Log(hit.point);
+            RaycastPoint = hit.point;
     }
 }

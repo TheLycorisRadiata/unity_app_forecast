@@ -143,6 +143,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 1358373116}
   rotateSpeed: 15
+--- !u!135 &40377806
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40377798}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 9.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &58263662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -343,6 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c743fba5ee645ef4d9fe3bd2c3e9c2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RaycastPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
