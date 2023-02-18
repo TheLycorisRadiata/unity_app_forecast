@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 1934136699}
+  yaw: 0
 --- !u!1 &292022811
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 1934136699}
+  pitch: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,6 +888,7 @@ GameObject:
   - component: {fileID: 3469287837533954080}
   - component: {fileID: 1711813855620601066}
   - component: {fileID: 3469287837533954082}
+  - component: {fileID: 3469287837533954083}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -957,3 +960,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4711208715938537054, guid: c49ad153c7632172f9e7cb52c46d1881, type: 3}
+--- !u!114 &3469287837533954083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149212525887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 008dadf198faf7240a254eb88de93b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastScript: {fileID: 330585548}
+  horizontalRotationScript: {fileID: 292022813}
+  verticalRotationScript: {fileID: 197172604}
