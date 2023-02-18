@@ -10,6 +10,7 @@ public class RotateVertically : MonoBehaviour
     void FixedUpdate()
     {
         yaw += input.movementVector.y * rotateSpeed * Time.deltaTime;
+        yaw = yaw < -360f || yaw > 360f ? 0f : yaw;
         transform.localRotation = Quaternion.Euler(yaw, 0f, 0f);
     }
 }
