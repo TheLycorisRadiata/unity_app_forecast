@@ -53,7 +53,7 @@ public class CartesianCoordinates : MonoBehaviour
         if (xRaycastWithOffset > 180f && xRaycastWithOffset <= 360f)
             longitude = xRaycastWithOffset - 360f;
         // If you go west
-        else if (xRaycastWithOffset < -180f && xRaycastWithOffset >= -360f)
+        else if (xRaycastWithOffset <= -180f && xRaycastWithOffset >= -360f)
             longitude = xRaycastWithOffset + 360f;
 
         //Debug.Log("[Rotation] X: " + xRotation + " / Y: " + yRotation);
