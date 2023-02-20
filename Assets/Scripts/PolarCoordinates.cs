@@ -30,7 +30,5 @@ public class PolarCoordinates : MonoBehaviour
         // If you go west
         else if (cartesian.xCoordinate <= -180f && cartesian.xCoordinate >= -360f)
             longitude = cartesian.xCoordinate + 360f;
-
-        //Debug.Log("Latitude: " + latitude + " / Longitude: " + longitude);
     }
 }
