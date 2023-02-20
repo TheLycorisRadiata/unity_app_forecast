@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CartesianCoordinates : MonoBehaviour
@@ -10,8 +11,9 @@ public class CartesianCoordinates : MonoBehaviour
     /*
         The Z raycast value when sampled from the center of the sphere seems to be -47.434.
         I couldn't find the way to save the value automatically, and resorted to run manual tests to find it.
+        Note that the absolute value is used, hence the multiplication by -1.
     */
-    private float zRaycastCenter = -47.434f;
+    private float zRaycastCenter = -47.434f * -1f;
 
     void Start()
     {
@@ -50,7 +52,7 @@ public class CartesianCoordinates : MonoBehaviour
 
         float xRaycast = raycastScript.RaycastPoint.x;
         float yRaycast = raycastScript.RaycastPoint.y;
-        float zRaycast = raycastScript.RaycastPoint.z;
+        float zRaycast = Math.Abs(raycastScript.RaycastPoint.z);
 
         float xRotationOffset = horizontalRotationScript.pitch;
         float yRotationOffset = -verticalRotationScript.yaw;
@@ -63,9 +65,10 @@ public class CartesianCoordinates : MonoBehaviour
             - Real latitude and longitude: Nice (43.7, 7.2) and London (51.5, 0).
         */
 
-        // Variables to try to make sense of zRaycast
-        float radius = zRaycastCenter * -1f;
-        float surfaceToInnerAxisDistance = zRaycast * -1f;
-        float screenToSurfaceDistance = radius - surfaceToInnerAxisDistance;
+        // The inclination and the azimuth are degrees
+        float radius = zRaycastCenter;
+        float distanceToSphere = radius - zRaycast;
+        float inclination = (float)Math.Acos(distanceToSphere / radius);
+        float azimuth = (float)Math.Atan2(yRaycast, xRaycast); // maybe it should be yCoordinate and xCoordinate instead
     }
 }
