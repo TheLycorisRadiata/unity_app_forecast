@@ -5,7 +5,13 @@ public class CartesianCoordinates : MonoBehaviour
     [SerializeField] private WebglRaycast raycastScript;
     [SerializeField] private RotateHorizontally horizontalRotationScript;
     [SerializeField] private RotateVertically verticalRotationScript;
+    private float zRaycastCenter = -47.434f;
     public float xCoordinate, yCoordinate;
+
+    /*
+        The Z raycast value when sampled from the center of the sphere seems to be -47.434.
+        I couldn't find the way to save the value automatically, and resorted to run manual tests to find it.
+    */
 
     void Update()
     {
@@ -17,8 +23,8 @@ public class CartesianCoordinates : MonoBehaviour
             - [X] Convert the cartesian Y coordinate to the latitude equivalent.
             - [X] Convert the cartesian X coordinate to the longitude equivalent.
 
-            NOTE: Only the X and Y values of the raycast have been used so far. This means that the coordinates are only correct when the cursor is right on the middle of the sphere.
-            This can be fixed by adding the Z raycast value as an offset, but keep in mind that the Z raycast value changes depending on the zoom (camera position on the Z axis).
+            NOTE: Only xRaycast and yRaycast have been used so far. This means that the coordinates are only correct when the cursor is right on the middle of the sphere.
+            This can be fixed by adding zRaycast as an offset, but keep in mind that zRaycast changes depending on the zoom (camera position on the Z axis).
             - [ ] Add the Earth curvature to the cartesian coordinates computation.
 
             NOTE: The initial Earth rotation ("Model" gameobject) has its importance and is currently: 0, -250, 0.
@@ -27,33 +33,31 @@ public class CartesianCoordinates : MonoBehaviour
             - [ ] Take the Earth default rotation into account, so that any chosen default rotation doesn't break the coordinates.
         */
 
-        /*
-            CURVATURE PROBLEM
-            - zRaycast seems to be -47.5 at 0x0, and this no matter the zoom.
-            - But, when we aim for the horizon of the sphere, zRaycast changes depending on the zoom.
-
-            - Another observation is that around ~20 is added to the latitude when its sampled from the horizon and not 0x0.
-            - I haven't checked for the longitude.
-            - This is for the default zoom, the observed offset may be different from ~20 with another zoom.
-
-            - Otherwise, I have the beginning of a calculus:
-                * zRaycast + 47.5 --> Result is a number between 0 and ~25 (at default zoom)
-                * latitude - result --> Correct latitude
-        */
-
         float xRotation = horizontalRotationScript.pitch;
         float yRotation = -verticalRotationScript.yaw;
 
         float xRaycast = raycastScript.RaycastPoint.x;
         float yRaycast = raycastScript.RaycastPoint.y;
-        float zRaycast = raycastScript.RaycastPoint.z;
+        float zRaycast = raycastScript.RaycastPoint.z - zRaycastCenter;
 
         xCoordinate = xRaycast + xRotation;
         yCoordinate = yRaycast + yRotation;
 
+        /*
+            CURVATURE PROBLEM
+            - zRaycast is 0 on the center, otherwise its value changes depending on the zoom.
+            - At default zoom it's a number between 0 and ~25.
+
+            - Another observation is that around ~20 is added to the latitude when its sampled from the horizon instead of 0x0.
+            - I haven't checked for the longitude.
+            - This is for the default zoom, the observed offset may be different from ~20 with another zoom.
+
+            - CALCULUS: latitude - zRaycast --> Correct latitude?
+        */
+
         //Debug.Log("[Rotation] X: " + xRotation + " / Y: " + yRotation);
-        //Debug.Log("[Raycast] X (no offset): " + xRaycast + " / X (with offset): " + xCoordinate);
-        //Debug.Log("[Raycast] Y (no offset): " + yRaycast + " / Y (with offset): " + yCoordinate);
+        //Debug.Log("[Raycast] X (no offset): " + xRaycast + " / X (with rotation offset): " + xCoordinate);
+        //Debug.Log("[Raycast] Y (no offset): " + yRaycast + " / Y (with rotation offset): " + yCoordinate);
         //Debug.Log("[Raycast] Z: " + zRaycast);
         //Debug.Log("-------------");
     }
