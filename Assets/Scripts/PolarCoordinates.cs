@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PolarCoordinates : MonoBehaviour
 {
-    [SerializeField] private CartesianCoordinates cartesian;
     public float latitude, longitude;
+    [SerializeField] private CartesianCoordinates cartesian;
 
     void Update()
     {
