@@ -973,11 +973,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 008dadf198faf7240a254eb88de93b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xCoordinate: 0
+  yCoordinate: 0
   raycastScript: {fileID: 330585548}
   horizontalRotationScript: {fileID: 292022813}
   verticalRotationScript: {fileID: 197172604}
-  xCoordinate: 0
-  yCoordinate: 0
 --- !u!114 &3469287837533954084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -990,6 +990,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96de07b36c58f904a917d886247d9206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cartesian: {fileID: 3469287837533954083}
   latitude: 0
   longitude: 0
+  cartesian: {fileID: 3469287837533954083}
