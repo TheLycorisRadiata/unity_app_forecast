@@ -19,12 +19,12 @@ public class CartesianCoordinates : MonoBehaviour
     {
         /*
             Null Island is at the 0x0 polar coordinates.
-            In the inspector, Null Island is centered at (0, -270, -1) but the euler angles are (0, 90, 359).
+            In the inspector, Null Island is centered at (0, -272.4, -2) but the euler angles are (0, 87.6, 358).
             The euler angles need to be used in script, as it's not possible to access the inspector rotation values.
             Also note that 360 is the same as 0, and vice versa.
         */
 
-        Vector3 modelRotationForCenteredNullIsland = new Vector3(360f, 90f, 359f);
+        Vector3 modelRotationForCenteredNullIsland = new Vector3(360f, 87.6f, 358f);
         Vector3 modelRotation = transform.eulerAngles;
 
         // unused in our context
@@ -60,15 +60,18 @@ public class CartesianCoordinates : MonoBehaviour
         xCoordinate = xRaycast + xRotationOffset - modelRotationOffset.y;
         yCoordinate = yRaycast + yRotationOffset + modelRotationOffset.z;
 
-        /*
-            CURVATURE PROBLEM
-            - Real latitude and longitude: Nice (43.7, 7.2) and London (51.5, 0).
-        */
-
         // The inclination and the azimuth are degrees
         float radius = zRaycastCenter;
         float distanceToSphere = radius - zRaycast;
         float inclination = (float)Math.Acos(distanceToSphere / radius);
-        float azimuth = (float)Math.Atan2(yRaycast, xRaycast); // maybe it should be yCoordinate and xCoordinate instead
+        float azimuth = (float)Math.Atan2(yCoordinate, xCoordinate);
+
+        xCoordinate += azimuth;
+        yCoordinate += inclination;
+
+        /*
+            CURVATURE PROBLEM
+            - Real latitude and longitude: Nice (43.7, 7.2) and London (51.5, 0).
+        */
     }
 }
