@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PinsManager : MonoBehaviour
 {
 
     [SerializeField] public WebglRaycast webglRaycast;
     [SerializeField] private Vector3 pinsPosition;
+    public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
     public Transform parent;
     private GameObject pins;
@@ -36,6 +38,7 @@ public class PinsManager : MonoBehaviour
             pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
             pins.SetActive(true);
             IsPinned = true;
+            OpenMenu.Invoke();
         }
         else
         {
