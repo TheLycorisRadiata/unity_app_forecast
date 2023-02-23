@@ -14,9 +14,8 @@ public class WebglRaycast : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Draw ray
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Debug.DrawRay(ray.origin, ray.direction * 90, Color.blue);
+        //Debug.DrawRay(ray.origin, ray.direction * 90, Color.blue);
 
         RaycastHit hit;
 
