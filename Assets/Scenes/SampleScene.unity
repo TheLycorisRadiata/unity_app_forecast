@@ -542,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7621e55a20137534a93c15a0764a871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 1934136699}
   webglRaycast: {fileID: 330585548}
   pinsPosition: {x: 0, y: 0, z: 0}
   pinsPrefab: {fileID: 4270217806825383221, guid: a7b965d4eac90e2458efd86c92ba786c,
@@ -809,7 +810,6 @@ GameObject:
   - component: {fileID: 1711813855620601066}
   - component: {fileID: 3469287837533954082}
   - component: {fileID: 3469287837533954083}
-  - component: {fileID: 3469287837533954084}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -888,27 +888,10 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149212525887}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 008dadf198faf7240a254eb88de93b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coordinates: {x: 0, y: 0, z: 0}
   raycastScript: {fileID: 330585548}
-  horizontalRotationScript: {fileID: 0}
-  verticalRotationScript: {fileID: 0}
---- !u!114 &3469287837533954084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149212525887}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96de07b36c58f904a917d886247d9206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  latitude: 0
-  longitude: 0
-  cartesianScript: {fileID: 3469287837533954083}
+  coordinates: {x: 0, y: 0, z: 0}
