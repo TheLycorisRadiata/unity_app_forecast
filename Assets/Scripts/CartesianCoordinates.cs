@@ -19,9 +19,22 @@ public class CartesianCoordinates : MonoBehaviour
         float xRotationOffset = horizontalRotationScript.pitch - modelRotationOffset.y;
         float yRotationOffset = modelRotationOffset.z - verticalRotationScript.yaw;
 
+        // Apply the rotation offset to the cartesian coordinates
         coordinates = raycastScript.RaycastPoint;
         coordinates.x += xRotationOffset;
         coordinates.y += yRotationOffset;
+
+        // Because of this, the coordinates may be outside of the -360/+360 range
+        // If that's so, add or remove 360 so that "360" is considered as "0" (e.g. 367 becomes 7)
+        if (coordinates.x > 360f)
+            coordinates.x -= 360f;
+        else if (coordinates.x < -360f)
+            coordinates.x += 360f;
+
+        if (coordinates.y > 360f)
+            coordinates.y -= 360f;
+        else if (coordinates.y < -360f)
+            coordinates.y += 360f;
     }
 
     private Vector3 RotationOffsetRelativeToNullIsland()
