@@ -34,9 +34,15 @@ public class PolarCoordinates : MonoBehaviour
             cartesian.y = cartesian.y + 360f;
 
         // Apply the curvature
+        /*
         dir = cartesian.normalized;
         latitude = Mathf.Asin(dir.y) * Mathf.Rad2Deg;
         longitude = Mathf.Atan2(dir.x, - dir.z) * Mathf.Rad2Deg;
+        */
+
+        // If curvature is not applied
+        latitude = cartesian.y;
+        longitude = cartesian.x;
 
         // CHECK: Real latitude and longitude --> Nice (43.7, 7.2) and London (51.5, 0)
     }
