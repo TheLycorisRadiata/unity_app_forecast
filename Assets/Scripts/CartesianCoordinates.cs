@@ -6,8 +6,8 @@ public class CartesianCoordinates : MonoBehaviour
     private Vector3 modelRotationOffset;
 
     [SerializeField] private WebglRaycast raycastScript;
-    [SerializeField] private RotateHorizontally horizontalRotationScript;
-    [SerializeField] private RotateVertically verticalRotationScript;
+    //[SerializeField] private RotateHorizontally horizontalRotationScript;
+    //[SerializeField] private RotateVertically verticalRotationScript;
  
     void Start()
     {
@@ -16,6 +16,7 @@ public class CartesianCoordinates : MonoBehaviour
 
     void Update()
     {
+        /*
         float xRotationOffset = horizontalRotationScript.pitch - modelRotationOffset.y;
         float yRotationOffset = modelRotationOffset.z - verticalRotationScript.yaw;
 
@@ -35,6 +36,7 @@ public class CartesianCoordinates : MonoBehaviour
             coordinates.y -= 360f;
         else if (coordinates.y < -360f)
             coordinates.y += 360f;
+        */
     }
 
     private Vector3 RotationOffsetRelativeToNullIsland()
