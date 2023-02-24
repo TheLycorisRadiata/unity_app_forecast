@@ -6,9 +6,8 @@ public class PinsManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
     [SerializeField] private WebglRaycast webglRaycast;
-    [SerializeField] private PolarCoordinates polarScript;
+    [SerializeField] private Transform earthModelTransform;
     [SerializeField] private LatLongText latLongText;
-    public float latitude, longitude;
 
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
@@ -39,16 +38,14 @@ public class PinsManager : MonoBehaviour
         if (isPinned == false)
         {
             CreatePin();
-            SavePolarCoordinates();
-            LocationUpdate();
+            UpdatePolarCoordinates();
             latLongText.LatLongTextUpdate();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
-            SavePolarCoordinates();
-            LocationUpdate();
+            UpdatePolarCoordinates();
             latLongText.LatLongTextUpdate();
         }
     }
@@ -68,15 +65,13 @@ public class PinsManager : MonoBehaviour
         pins.SetActive(true);
     }
 
-    private void SavePolarCoordinates()
+    private void UpdatePolarCoordinates()
     {
-        latitude = (float)Math.Round(polarScript.coordinates.y, 2);
-        longitude = (float)Math.Round(polarScript.coordinates.x, 2);
-    }
+        Vector3 coordinates = earthModelTransform.InverseTransformPoint(pinsPosition);
+        coordinates.y = 90f - Mathf.Acos(coordinates.y / coordinates.magnitude) * Mathf.Rad2Deg;
+        coordinates.x = Mathf.Atan2(coordinates.z, coordinates.x) * Mathf.Rad2Deg;
 
-    private void LocationUpdate()
-    {
-        location.locationLat = latitude;
-        location.locationLon = longitude;
+        location.locationLat = (float)Math.Round(coordinates.y, 2);
+        location.locationLon = (float)Math.Round(coordinates.x, 2);
     }
 }
