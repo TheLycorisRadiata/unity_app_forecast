@@ -16,6 +16,7 @@ public class Address
     // Different properties for the location name
     public string city;
     public string municipality;
+    public string village;
     public string county;
     public string province;
     public string country;
@@ -59,7 +60,7 @@ public class ReverseGeocoding : MonoBehaviour
             }
 
             Address address = ro.address;
-            location.locationName = address.city ?? address.municipality ?? address.county ?? address.province ?? address.country ?? address.man_made;
+            location.locationName = address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? address.country ?? address.man_made;
             location.locationCountryCode = address.country_code;
         }
     }
