@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Location
   m_EditorClassIdentifier: 
   locationName: 
-  locationLat: 0
-  locationLon: 0
+  locationLat: 30.12
+  locationLon: 26.9
+  locationCountryCode: 
