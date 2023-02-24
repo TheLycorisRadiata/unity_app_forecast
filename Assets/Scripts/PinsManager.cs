@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 public class PinsManager : MonoBehaviour
 {
-
-    [SerializeField] public WebglRaycast webglRaycast;
+    [SerializeField] private UserInput input;
+    [SerializeField] private WebglRaycast webglRaycast;
     [SerializeField] private Vector3 pinsPosition;
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
@@ -15,16 +15,14 @@ public class PinsManager : MonoBehaviour
     private bool IsPinned;
     private Quaternion pinsRotation; 
 
-    // Start is called before the first frame update
     void Start()
     {
         IsPinned = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (input.click)
             PinsWithRaycast();
     }
 
@@ -47,6 +45,5 @@ public class PinsManager : MonoBehaviour
             pins.transform.rotation = pinsRotation;
             pins.SetActive(true);
         }
-        
     }
 }
