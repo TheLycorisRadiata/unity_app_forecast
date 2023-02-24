@@ -658,8 +658,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7621e55a20137534a93c15a0764a871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 1934136699}
   webglRaycast: {fileID: 330585548}
+  polarScript: {fileID: 3469287837533954083}
   pinsPosition: {x: 0, y: 0, z: 0}
+  polarCoordinates: {x: 0, y: 0}
   OpenMenu:
     m_PersistentCalls:
       m_Calls:

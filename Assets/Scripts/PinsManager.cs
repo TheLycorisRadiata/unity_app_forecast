@@ -1,30 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PinsManager : MonoBehaviour
 {
+    [SerializeField] private UserInput input;
+    [SerializeField] private WebglRaycast webglRaycast;
+    [SerializeField] private PolarCoordinates polarScript;
+    public float latitude, longitude;
 
-    [SerializeField] public WebglRaycast webglRaycast;
-    [SerializeField] private Vector3 pinsPosition;
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
     public Transform parent;
     private GameObject pins;
-    private bool IsPinned;
-    private Quaternion pinsRotation; 
+    private bool isPinned;
+    private Vector3 pinsPosition;
+    private Quaternion pinsRotation;
 
-    // Start is called before the first frame update
     void Start()
     {
-        IsPinned = false;
+        isPinned = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (input.click)
             PinsWithRaycast();
     }
 
@@ -33,20 +33,37 @@ public class PinsManager : MonoBehaviour
         pinsPosition = webglRaycast.RaycastPoint;
         pinsRotation = webglRaycast.RaycastRotation;
 
-        if (IsPinned == false)
+        if (isPinned == false)
         {
-            pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
-            pins.SetActive(true);
-            IsPinned = true;
+            CreatePin();
+            SavePolarCoordinates();
             OpenMenu.Invoke();
         }
         else
         {
-            pins.SetActive(false);
-            pins.transform.position = pinsPosition;
-            pins.transform.rotation = pinsRotation;
-            pins.SetActive(true);
+            MovePin();
+            SavePolarCoordinates();
         }
-        
+    }
+
+    private void CreatePin()
+    {
+        pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
+        pins.SetActive(true);
+        isPinned = true;
+    }
+
+    private void MovePin()
+    {
+        pins.SetActive(false);
+        pins.transform.position = pinsPosition;
+        pins.transform.rotation = pinsRotation;
+        pins.SetActive(true);
+    }
+
+    private void SavePolarCoordinates()
+    {
+        latitude = (float)Math.Round(polarScript.coordinates.y, 2);
+        longitude = (float)Math.Round(polarScript.coordinates.x, 2);
     }
 }
