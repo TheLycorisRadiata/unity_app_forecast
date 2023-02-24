@@ -7,6 +7,7 @@ public class PinsManager : MonoBehaviour
     [SerializeField] private UserInput input;
     [SerializeField] private WebglRaycast webglRaycast;
     [SerializeField] private PolarCoordinates polarScript;
+    [SerializeField] private LatLongText latLongText;
     public float latitude, longitude;
 
     public UnityEvent OpenMenu;
@@ -40,6 +41,7 @@ public class PinsManager : MonoBehaviour
             CreatePin();
             SavePolarCoordinates();
             LocationUpdate();
+            latLongText.LatLongTextUpdate();
             OpenMenu.Invoke();
         }
         else
@@ -47,6 +49,7 @@ public class PinsManager : MonoBehaviour
             MovePin();
             SavePolarCoordinates();
             LocationUpdate();
+            latLongText.LatLongTextUpdate();
         }
     }
 
