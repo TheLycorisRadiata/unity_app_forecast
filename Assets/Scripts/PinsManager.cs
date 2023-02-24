@@ -11,7 +11,7 @@ public class PinsManager : MonoBehaviour
     public Transform parent;
     private GameObject pins;
     private bool IsPinned;
-    private Quaternion pinsRotation; 
+    private Quaternion pinsRotation;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +44,6 @@ public class PinsManager : MonoBehaviour
             pins.transform.rotation = pinsRotation;
             pins.SetActive(true);
         }
-        
+
     }
 }

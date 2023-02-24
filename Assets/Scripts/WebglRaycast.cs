@@ -9,9 +9,9 @@ public class WebglRaycast : MonoBehaviour
 {
 
     [SerializeField] public Vector3 RaycastPoint;
-    [SerializeField] public Quaternion RaycastRotation; 
+    [SerializeField] public Quaternion RaycastRotation;
     Camera cam;
-   
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +33,7 @@ public class WebglRaycast : MonoBehaviour
         {
             //Debug.Log(hit.point);
             RaycastPoint = hit.point;
-            RaycastRotation =  Quaternion.FromToRotation(Vector3.up, hit.normal);
+            RaycastRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
         }
     }
 }
