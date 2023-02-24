@@ -70,6 +70,13 @@ public class PinsManager : MonoBehaviour
         latitude = (float)Math.Round(polarScript.coordinates.y, 2);
         longitude = (float)Math.Round(polarScript.coordinates.x, 2);
 
-        Debug.Log("test");
+        string jsonText = api.FetchData($"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json");
+        if (jsonText != null)
+        {
+            ReverseGeocoding reverseGeocoding = JsonUtility.FromJson<ReverseGeocoding>(jsonText);
+            Address address = reverseGeocoding.address;
+            string placeName = address.city != null ? address.city : address.municipality;
+            string countryCode = address.country_code;
+        }
     }
 }
