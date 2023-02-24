@@ -7,17 +7,20 @@ public class PinsManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
     [SerializeField] private WebglRaycast webglRaycast;
+    [SerializeField] private PolarCoordinates polarScript;
     [SerializeField] private Vector3 pinsPosition;
+    public Vector2 polarCoordinates;
+
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
     public Transform parent;
     private GameObject pins;
-    private bool IsPinned;
+    private bool isPinned;
     private Quaternion pinsRotation; 
 
     void Start()
     {
-        IsPinned = false;
+        isPinned = false;
     }
 
     void Update()
@@ -31,19 +34,29 @@ public class PinsManager : MonoBehaviour
         pinsPosition = webglRaycast.RaycastPoint;
         pinsRotation = webglRaycast.RaycastRotation;
 
-        if (IsPinned == false)
+        if (isPinned == false)
         {
-            pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
-            pins.SetActive(true);
-            IsPinned = true;
+            CreatePin();
             OpenMenu.Invoke();
         }
         else
         {
-            pins.SetActive(false);
-            pins.transform.position = pinsPosition;
-            pins.transform.rotation = pinsRotation;
-            pins.SetActive(true);
+            MovePin();
         }
+    }
+
+    private void CreatePin()
+    {
+        pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
+        pins.SetActive(true);
+        isPinned = true;
+    }
+
+    private void MovePin()
+    {
+        pins.SetActive(false);
+        pins.transform.position = pinsPosition;
+        pins.transform.rotation = pinsRotation;
+        pins.SetActive(true);
     }
 }
