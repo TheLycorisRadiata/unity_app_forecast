@@ -11,11 +11,13 @@ public class PinsManager : MonoBehaviour
 
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
+    public Location location;
     public Transform parent;
     private GameObject pins;
     private bool isPinned;
     private Vector3 pinsPosition;
     private Quaternion pinsRotation;
+    
 
     void Start()
     {
@@ -37,12 +39,14 @@ public class PinsManager : MonoBehaviour
         {
             CreatePin();
             SavePolarCoordinates();
+            LocationUpdate();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
             SavePolarCoordinates();
+            LocationUpdate();
         }
     }
 
@@ -65,5 +69,11 @@ public class PinsManager : MonoBehaviour
     {
         latitude = (float)Math.Round(polarScript.coordinates.y, 2);
         longitude = (float)Math.Round(polarScript.coordinates.x, 2);
+    }
+
+    private void LocationUpdate()
+    {
+        location.locationLat = latitude;
+        location.locationLon = longitude;
     }
 }

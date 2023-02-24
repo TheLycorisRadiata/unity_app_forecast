@@ -3,7 +3,13 @@ guid: 7621e55a20137534a93c15a0764a871b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - input: {instanceID: 0}
+  - webglRaycast: {instanceID: 0}
+  - polarScript: {instanceID: 0}
+  - pinsPrefab: {instanceID: 0}
+  - location: {fileID: 11400000, guid: 6bc1ca7ccce83a749998a9f5401cb273, type: 2}
+  - parent: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
