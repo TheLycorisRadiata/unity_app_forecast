@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PinsManager : MonoBehaviour
 {
 
     [SerializeField] public WebglRaycast webglRaycast;
     [SerializeField] private Vector3 pinsPosition;
+    public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
     public Transform parent;
     private GameObject pins;
     private bool IsPinned;
-    private Quaternion pinsRotation;
+    private Quaternion pinsRotation; 
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,7 @@ public class PinsManager : MonoBehaviour
             pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
             pins.SetActive(true);
             IsPinned = true;
+            OpenMenu.Invoke();
         }
         else
         {
@@ -44,6 +47,6 @@ public class PinsManager : MonoBehaviour
             pins.transform.rotation = pinsRotation;
             pins.SetActive(true);
         }
-
+        
     }
 }
