@@ -395,6 +395,7 @@ GameObject:
   m_Component:
   - component: {fileID: 609774748}
   - component: {fileID: 609774749}
+  - component: {fileID: 609774750}
   m_Layer: 0
   m_Name: Earth
   m_TagString: Untagged
@@ -431,6 +432,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 1934136699}
+--- !u!114 &609774750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609774747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc5fd691885b6b43a54fbdac55d0f21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 45
+  duration: 2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,7 +658,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7621e55a20137534a93c15a0764a871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
   webglRaycast: {fileID: 330585548}
   pinsPosition: {x: 0, y: 0, z: 0}
   OpenMenu:
@@ -661,7 +675,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 609774749}
+      - m_Target: {fileID: 609774750}
         m_TargetAssemblyTypeName: EarthAnimator, Assembly-CSharp
         m_MethodName: MoveEarth
         m_Mode: 1
