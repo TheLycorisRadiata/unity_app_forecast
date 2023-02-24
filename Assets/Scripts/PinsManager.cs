@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class PinsManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
+    [SerializeField] private ApiInteraction api;
     [SerializeField] private WebglRaycast webglRaycast;
     [SerializeField] private PolarCoordinates polarScript;
     public float latitude, longitude;
@@ -25,7 +26,10 @@ public class PinsManager : MonoBehaviour
     void Update()
     {
         if (input.click)
+        {
             PinsWithRaycast();
+            input.click = false;
+        }
     }
 
     public void PinsWithRaycast()
@@ -65,5 +69,7 @@ public class PinsManager : MonoBehaviour
     {
         latitude = (float)Math.Round(polarScript.coordinates.y, 2);
         longitude = (float)Math.Round(polarScript.coordinates.x, 2);
+
+        Debug.Log("test");
     }
 }
