@@ -5,18 +5,20 @@ using UnityEngine.Events;
 public class PinsManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
-    [SerializeField] private ApiInteraction api;
     [SerializeField] private WebglRaycast webglRaycast;
     [SerializeField] private PolarCoordinates polarScript;
+    [SerializeField] private LatLongText latLongText;
     public float latitude, longitude;
 
     public UnityEvent OpenMenu;
     public GameObject pinsPrefab;
+    public Location location;
     public Transform parent;
     private GameObject pins;
     private bool isPinned;
     private Vector3 pinsPosition;
     private Quaternion pinsRotation;
+    
 
     void Start()
     {
@@ -26,10 +28,7 @@ public class PinsManager : MonoBehaviour
     void Update()
     {
         if (input.click)
-        {
             PinsWithRaycast();
-            input.click = false;
-        }
     }
 
     public void PinsWithRaycast()
@@ -41,12 +40,16 @@ public class PinsManager : MonoBehaviour
         {
             CreatePin();
             SavePolarCoordinates();
+            LocationUpdate();
+            latLongText.LatLongTextUpdate();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
             SavePolarCoordinates();
+            LocationUpdate();
+            latLongText.LatLongTextUpdate();
         }
     }
 
@@ -69,14 +72,11 @@ public class PinsManager : MonoBehaviour
     {
         latitude = (float)Math.Round(polarScript.coordinates.y, 2);
         longitude = (float)Math.Round(polarScript.coordinates.x, 2);
+    }
 
-        string jsonText = api.FetchData($"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json");
-        if (jsonText != null)
-        {
-            ReverseGeocoding reverseGeocoding = JsonUtility.FromJson<ReverseGeocoding>(jsonText);
-            Address address = reverseGeocoding.address;
-            string placeName = address.city != null ? address.city : address.municipality;
-            string countryCode = address.country_code;
-        }
+    private void LocationUpdate()
+    {
+        location.locationLat = latitude;
+        location.locationLon = longitude;
     }
 }
