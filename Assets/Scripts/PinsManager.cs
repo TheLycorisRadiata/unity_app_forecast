@@ -7,6 +7,7 @@ public class PinsManager : MonoBehaviour
     [SerializeField] private UserInput input;
     [SerializeField] private WebglRaycast webglRaycast;
     [SerializeField] private Transform earthModelTransform;
+    [SerializeField] private ReverseGeocoding reverseGeocoding;
     [SerializeField] private LatLongText latLongText;
 
     public UnityEvent OpenMenu;
@@ -17,7 +18,6 @@ public class PinsManager : MonoBehaviour
     private bool isPinned;
     private Vector3 pinsPosition;
     private Quaternion pinsRotation;
-    
 
     void Start()
     {
@@ -27,7 +27,10 @@ public class PinsManager : MonoBehaviour
     void Update()
     {
         if (input.click)
+        {
             PinsWithRaycast();
+            input.click = false;
+        }
     }
 
     public void PinsWithRaycast()
@@ -38,15 +41,15 @@ public class PinsManager : MonoBehaviour
         if (isPinned == false)
         {
             CreatePin();
-            UpdatePolarCoordinates();
-            latLongText.LatLongTextUpdate();
+            UpdateLocationData();
+            UpdateMenu();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
-            UpdatePolarCoordinates();
-            latLongText.LatLongTextUpdate();
+            UpdateLocationData();
+            UpdateMenu();
         }
     }
 
@@ -65,6 +68,12 @@ public class PinsManager : MonoBehaviour
         pins.SetActive(true);
     }
 
+    private void UpdateLocationData()
+    {
+        UpdatePolarCoordinates();
+        reverseGeocoding.UpdateLocationNameAndCountryCode();
+    }
+
     private void UpdatePolarCoordinates()
     {
         Vector3 coordinates = earthModelTransform.InverseTransformPoint(pinsPosition);
@@ -73,5 +82,10 @@ public class PinsManager : MonoBehaviour
 
         location.locationLat = (float)Math.Round(coordinates.y, 2);
         location.locationLon = (float)Math.Round(coordinates.x, 2);
+    }
+
+    private void UpdateMenu()
+    {
+        latLongText.LatLongTextUpdate();
     }
 }
