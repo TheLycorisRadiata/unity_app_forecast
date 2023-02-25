@@ -24,7 +24,6 @@ public class ReverseGeocoding : MonoBehaviour
 
         string jsonText;
         Nominatim nominatim;
-        NominatimAddress address;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -47,10 +46,8 @@ public class ReverseGeocoding : MonoBehaviour
                 yield break;
             }
 
-            address = nominatim.address;
-            location.locationName = address.town ?? address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? 
-                address.region ?? address.state_district ?? address.state ?? address.country ?? address.man_made;
-            location.locationCountryCode = address.country_code;
+            location.locationName = GetLocationName(nominatim.address);
+            location.locationCountryCode = nominatim.address.country_code;
 
             // If there is at least one non-latin character in the string
             if (!Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
@@ -65,6 +62,52 @@ public class ReverseGeocoding : MonoBehaviour
     {
         location.locationName = null;
         location.locationCountryCode = null;
+    }
+
+    private string GetLocationName(NominatimAddress address)
+    {
+        List<string> names = new List<string>();
+        string nativeName = null;
+        int i;
+
+        // Add all the non-null names
+        if (address.town != null)
+            names.Add(address.town);
+        if (address.city != null)
+            names.Add(address.city);
+        if (address.municipality != null)
+            names.Add(address.municipality);
+        if (address.village != null)
+            names.Add(address.village);
+        if (address.county != null)
+            names.Add(address.county);
+        if (address.province != null)
+            names.Add(address.province);
+        if (address.region != null)
+            names.Add(address.region);
+        if (address.state_district != null)
+            names.Add(address.state_district);
+        if (address.state != null)
+            names.Add(address.state);
+        if (address.country != null)
+            names.Add(address.country);
+        if (address.man_made != null)
+            names.Add(address.man_made);
+
+        // Save at least one name
+        nativeName = names[0];
+
+        // Remove the non-latin names
+        for (i = 0; i < names.Count; ++i)
+        {
+            // If there is at least one non-latin character in the string
+            if (!Regex.IsMatch(names[i], "[a-z]", RegexOptions.IgnoreCase))
+                names[i] = null;
+        }
+        names.RemoveAll(element => element == null);
+
+        // Return the first latin name or the native one
+        return names.Count > 0 ? names[0] : nativeName;
     }
 
     private IEnumerator FetchNameTranslation(string osmType, string osmId)
