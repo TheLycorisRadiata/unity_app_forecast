@@ -48,13 +48,16 @@ public class ReverseGeocoding : MonoBehaviour
             }
 
             address = nominatim.address;
-            location.locationName = address.town ?? address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? address.region ?? address.state_district ?? address.state ?? 
-                address.country ?? address.man_made;
+            location.locationName = address.town ?? address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? 
+                address.region ?? address.state_district ?? address.state ?? address.country ?? address.man_made;
             location.locationCountryCode = address.country_code;
 
             // If there is at least one non-latin character in the string
             if (!Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
                 StartCoroutine(FetchNameTranslation(nominatim.osm_type, nominatim.osm_id));
+            // If the location is Null Island
+            else if (nominatim.osm_type == "node" && nominatim.osm_id == "3815077900")
+                StartCoroutine(FetchNameTranslation("node", "3815077900"));
         }
     }
 
@@ -64,7 +67,7 @@ public class ReverseGeocoding : MonoBehaviour
         location.locationCountryCode = null;
     }
 
-    private IEnumerator FetchNameTranslation(string osmType, int osmId)
+    private IEnumerator FetchNameTranslation(string osmType, string osmId)
     {
         string uri = $"https://www.openstreetmap.org/api/0.6/{osmType}/{osmId}";
         string xmlText;

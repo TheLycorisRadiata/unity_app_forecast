@@ -3,7 +3,7 @@ public class Nominatim
 {
     public string error;
     public string osm_type;
-    public int osm_id;
+    public string osm_id; // string instead of a number, because some IDs are way too big
     public NominatimAddress address;
 }
 
