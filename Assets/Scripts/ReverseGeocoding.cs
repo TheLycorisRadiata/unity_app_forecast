@@ -40,7 +40,7 @@ public class ReverseGeocoding : MonoBehaviour
         // Depending on the user's language, the dot in the float will become a comma when inserted inside a string.
         string latitude = StringFormat.Float(location.locationLat);
         string longitude = StringFormat.Float(location.locationLon);
-        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=en&format=json";
+        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=fr,en&format=json";
 
         string jsonText;
 
