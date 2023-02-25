@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Globalization;
 
 [Serializable]
 public class RootObject
@@ -47,6 +48,7 @@ public class ReverseGeocoding : MonoBehaviour
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request failed to fetch from the API.");
+                Debug.LogWarning(webRequest);
                 yield break;
             }
 
