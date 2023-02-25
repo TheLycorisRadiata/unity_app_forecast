@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Globalization;
 
 [Serializable]
 public class RootObject
@@ -38,6 +37,11 @@ public class ReverseGeocoding : MonoBehaviour
 
     private IEnumerator FetchData()
     {
+        // Depending on the user's language, the dot in the float will become a comma when inserted inside a string.
+        //string latitude = StringFormat.Float(location.locationLat);
+        //string longitude = StringFormat.Float(location.locationLon);
+        //string uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=en&format=json";
+
         string uri = $"https://nominatim.openstreetmap.org/reverse?lat={location.locationLat}&lon={location.locationLon}&accept-language=en&format=json";
         string jsonText;
 
@@ -48,7 +52,7 @@ public class ReverseGeocoding : MonoBehaviour
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request failed to fetch from the API.");
-                Debug.LogWarning(webRequest);
+                ResetLocationNameAndCountryCode();
                 yield break;
             }
 
@@ -58,6 +62,7 @@ public class ReverseGeocoding : MonoBehaviour
             if (ro.error != null)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({location.locationLat},{location.locationLon}).");
+                ResetLocationNameAndCountryCode();
                 yield break;
             }
 
@@ -65,5 +70,11 @@ public class ReverseGeocoding : MonoBehaviour
             location.locationName = address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? address.country ?? address.man_made;
             location.locationCountryCode = address.country_code;
         }
+    }
+
+    private void ResetLocationNameAndCountryCode()
+    {
+        location.locationName = null;
+        location.locationCountryCode = null;
     }
 }
