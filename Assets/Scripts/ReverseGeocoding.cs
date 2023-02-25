@@ -19,6 +19,8 @@ public class Address
     public string village;
     public string county;
     public string province;
+    public string state_district;
+    public string state;
     public string country;
     public string man_made;
 
@@ -66,7 +68,7 @@ public class ReverseGeocoding : MonoBehaviour
             }
 
             Address address = ro.address;
-            location.locationName = address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? address.country ?? address.man_made;
+            location.locationName = address.city ?? address.municipality ?? address.village ?? address.county ?? address.province ?? address.state_district ?? address.state ?? address.country ?? address.man_made;
             location.locationCountryCode = address.country_code;
         }
     }
