@@ -4,7 +4,8 @@ public class Nominatim
     public string error;
     public string osm_type;
     public string osm_id; // string instead of a number, because some IDs are way too big
-    public NominatimAddress address;
+    public string display_name; // used for the geocoding
+    public NominatimAddress address; // used for the reverse geocoding
 }
 
 [System.Serializable]
