@@ -1,18 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EarthAnimator : MonoBehaviour
 {
     public float distance = 45f;
     public float duration = 2;
-    bool earthMoved;
-    Vector3 earthCenterPosition;
+    private bool earthMoved;
+    private Vector3 earthCenterPosition;
+
     public void Start()
     {
-        // Sets the first position of the earth.
+        // Set Earth's first position
         earthCenterPosition = transform.position;
     }
+
     public void MoveEarth()
     {
         StopAllCoroutines();
@@ -27,7 +28,8 @@ public class EarthAnimator : MonoBehaviour
         }
         earthMoved = !earthMoved;
     }
-    IEnumerator ShiftEarth(Vector3 targetPosition)
+
+    private IEnumerator ShiftEarth(Vector3 targetPosition)
     {
         float timeElapsed = 0;
         Vector3 startPosition = transform.position;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PanelOpener : MonoBehaviour
@@ -8,7 +6,7 @@ public class PanelOpener : MonoBehaviour
 
     public void OpenPanel()
     {
-        if (Panel !=null)
+        if (Panel != null)
         {
             Animator animator= GetComponentInChildren<Animator>();
             if (animator != null )

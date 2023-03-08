@@ -2,22 +2,23 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PinsManager : MonoBehaviour
+public class PinManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
-    [SerializeField] private WebglRaycast webglRaycast;
-    [SerializeField] private Transform earthModelTransform;
+    [SerializeField] private Raycast raycast;
     [SerializeField] private ReverseGeocoding reverseGeocoding;
     [SerializeField] private LatLongText latLongText;
 
-    public UnityEvent OpenMenu;
-    public GameObject pinsPrefab;
-    public Location location;
-    public Transform parent;
-    private GameObject pins;
+    [SerializeField] private GameObject pinPrefab;
+    [SerializeField] private Transform earthModel;
+    [SerializeField] private LocationScriptableObject location;
+
+    [SerializeField] private UnityEvent OpenMenu;
+
+    private GameObject pin;
     private bool isPinned;
-    private Vector3 pinsPosition;
-    private Quaternion pinsRotation;
+    private Vector3 pinPosition;
+    private Quaternion pinRotation;
 
     void Start()
     {
@@ -28,15 +29,15 @@ public class PinsManager : MonoBehaviour
     {
         if (input.click)
         {
-            PinsWithRaycast();
+            PinWithRaycast();
             input.click = false;
         }
     }
 
-    public void PinsWithRaycast()
+    public void PinWithRaycast()
     {
-        pinsPosition = webglRaycast.RaycastPoint;
-        pinsRotation = webglRaycast.RaycastRotation;
+        pinPosition = raycast.point;
+        pinRotation = raycast.rotation;
 
         if (isPinned == false)
         {
@@ -55,17 +56,17 @@ public class PinsManager : MonoBehaviour
 
     private void CreatePin()
     {
-        pins = Instantiate(pinsPrefab, pinsPosition, pinsRotation, parent);
-        pins.SetActive(true);
+        pin = Instantiate(pinPrefab, pinPosition, pinRotation, earthModel);
+        pin.SetActive(true);
         isPinned = true;
     }
 
     private void MovePin()
     {
-        pins.SetActive(false);
-        pins.transform.position = pinsPosition;
-        pins.transform.rotation = pinsRotation;
-        pins.SetActive(true);
+        pin.SetActive(false);
+        pin.transform.position = pinPosition;
+        pin.transform.rotation = pinRotation;
+        pin.SetActive(true);
     }
 
     private void UpdateLocationData()
@@ -76,12 +77,12 @@ public class PinsManager : MonoBehaviour
 
     private void UpdatePolarCoordinates()
     {
-        Vector3 coordinates = earthModelTransform.InverseTransformPoint(pinsPosition);
+        Vector3 coordinates = earthModel.InverseTransformPoint(pinPosition);
         coordinates.y = 90f - Mathf.Acos(coordinates.y / coordinates.magnitude) * Mathf.Rad2Deg;
         coordinates.x = Mathf.Atan2(coordinates.z, coordinates.x) * Mathf.Rad2Deg;
 
-        location.locationLat = (float)Math.Round(coordinates.y, 2);
-        location.locationLon = (float)Math.Round(coordinates.x, 2);
+        location.latitude = (float)Math.Round(coordinates.y, 2);
+        location.longitude = (float)Math.Round(coordinates.x, 2);
     }
 
     private void UpdateMenu()

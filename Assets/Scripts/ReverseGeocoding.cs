@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 public class ReverseGeocoding : MonoBehaviour
 {
-    [SerializeField] private Location location;
+    [SerializeField] private LocationScriptableObject location;
 
     public void UpdateLocationNameAndCountryCode()
     {
@@ -18,8 +18,8 @@ public class ReverseGeocoding : MonoBehaviour
     private IEnumerator FetchData()
     {
         // Depending on the user's language, the dot in the float will become a comma when inserted in a string
-        string latitude = StringFormat.Float(location.locationLat);
-        string longitude = StringFormat.Float(location.locationLon);
+        string latitude = StringFormat.Float(location.latitude);
+        string longitude = StringFormat.Float(location.longitude);
         string uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=fr,en&format=json";
 
         string jsonText;
@@ -41,13 +41,13 @@ public class ReverseGeocoding : MonoBehaviour
 
             if (nominatim.error != null)
             {
-                Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({location.locationLat},{location.locationLon}).");
+                Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({location.latitude},{location.longitude}).");
                 ResetLocationNameAndCountryCode();
                 yield break;
             }
 
             location.locationName = GetLocationName(nominatim.address);
-            location.locationCountryCode = nominatim.address.country_code;
+            location.countryCode = nominatim.address.country_code;
 
             // If there is at least one non-latin character in the string
             if (!Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
@@ -61,7 +61,7 @@ public class ReverseGeocoding : MonoBehaviour
     private void ResetLocationNameAndCountryCode()
     {
         location.locationName = null;
-        location.locationCountryCode = null;
+        location.countryCode = null;
     }
 
     private string GetLocationName(NominatimAddress address)

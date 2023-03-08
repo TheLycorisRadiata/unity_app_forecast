@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 public class Geocoding : MonoBehaviour
 {
-    [SerializeField] private Location location;
+    [SerializeField] private LocationScriptableObject location;
 
     // For debug purposes - To delete later
     [SerializeField] private string userInput;
