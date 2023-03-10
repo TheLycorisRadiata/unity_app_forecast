@@ -8,6 +8,7 @@ public class PinManager : MonoBehaviour
     [SerializeField] private Raycast raycast;
     [SerializeField] private PolarCoordinates polarCoordinates;
     [SerializeField] private ReverseGeocoding reverseGeocoding;
+    [SerializeField] private CountryFlag countryFlag;
     [SerializeField] private CoordinatesText coordinatesText;
 
     [SerializeField] private GameObject pinPrefab;
@@ -79,5 +80,6 @@ public class PinManager : MonoBehaviour
     private void UpdateMenu()
     {
         coordinatesText.CoordinatesTextUpdate();
+        countryFlag.UpdateFlag();
     }
 }
