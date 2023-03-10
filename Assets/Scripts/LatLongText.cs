@@ -10,6 +10,6 @@ public class LatLongText : MonoBehaviour
     public void LatLongTextUpdate()
     {
         latitudeText.text = "Latitude: " + location.latitude;
-        longitudeText.text = "Longitude: " + location.latitude;
+        longitudeText.text = "Longitude: " + location.longitude;
     }
 }

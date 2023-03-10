@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Raycast : MonoBehaviour
 {
+    [SerializeField] private UserInput input;
     public Vector3 point;
     public Quaternion rotation;
     private Camera cam;
@@ -14,7 +15,7 @@ public class Raycast : MonoBehaviour
 
     void FixedUpdate()
     {
-        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = cam.ScreenPointToRay(input.mousePosVector);
         Debug.DrawRay(ray.origin, ray.direction * 90, Color.blue);
 
         RaycastHit hit;

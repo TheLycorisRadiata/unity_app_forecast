@@ -4,13 +4,18 @@ using UnityEngine.InputSystem;
 
 public class UserInput : MonoBehaviour
 {
-    public Vector2 movementVector;
+    public Vector2 movementVector, mousePosVector;
     public float scroll;
     public bool click, cancel;
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
         movementVector = ctx.ReadValue<Vector2>();
+    }
+
+    public void OnMousePosition(InputAction.CallbackContext ctx)
+    {
+        mousePosVector = ctx.ReadValue<Vector2>();
     }
 
     public void OnScroll(InputAction.CallbackContext ctx)
