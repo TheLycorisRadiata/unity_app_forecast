@@ -9,7 +9,7 @@ public class PanelOpener : MonoBehaviour
         if (Panel != null)
         {
             Animator animator= GetComponentInChildren<Animator>();
-            if (animator != null )
+            if (animator != null)
             {
                 bool isOpen = animator.GetBool("open");
                 animator.SetBool("open", !isOpen);

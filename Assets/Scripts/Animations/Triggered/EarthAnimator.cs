@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class EarthAnimator : MonoBehaviour
 {
-    public float distance = 45f;
-    public float duration = 2;
-    private bool earthMoved;
-    private Vector3 earthCenterPosition;
+    private float distance = 45f;
+    private float duration = 2f;
+    private bool earthMoved = false;
+    private Vector3 earthInitialPosition, earthOpenPosition;
 
     public void Start()
     {
-        // Set Earth's first position
-        earthCenterPosition = transform.position;
+        earthInitialPosition = transform.position;
+        earthOpenPosition = earthInitialPosition + Vector3.left * distance;
     }
 
     public void MoveEarth()
@@ -19,19 +19,18 @@ public class EarthAnimator : MonoBehaviour
         StopAllCoroutines();
         if (!earthMoved)
         {
-            Vector3 openPosition = earthCenterPosition + Vector3.left * distance;
-            StartCoroutine(ShiftEarth(openPosition));
+            StartCoroutine(ShiftEarth(earthOpenPosition));
         }
         else
         {
-            StartCoroutine(ShiftEarth(earthCenterPosition));
+            StartCoroutine(ShiftEarth(earthInitialPosition));
         }
         earthMoved = !earthMoved;
     }
 
     private IEnumerator ShiftEarth(Vector3 targetPosition)
     {
-        float timeElapsed = 0;
+        float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
         while (timeElapsed < duration)
         {

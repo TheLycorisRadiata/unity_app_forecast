@@ -6,8 +6,9 @@ public class PinManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
     [SerializeField] private Raycast raycast;
+    [SerializeField] private PolarCoordinates polarCoordinates;
     [SerializeField] private ReverseGeocoding reverseGeocoding;
-    [SerializeField] private LatLongText latLongText;
+    [SerializeField] private CoordinatesText coordinatesText;
 
     [SerializeField] private GameObject pinPrefab;
     [SerializeField] private Transform earthModel;
@@ -71,22 +72,12 @@ public class PinManager : MonoBehaviour
 
     private void UpdateLocationData()
     {
-        UpdatePolarCoordinates();
+        polarCoordinates.UpdateLocationCoordinates(pinPosition);
         reverseGeocoding.UpdateLocationNameAndCountryCode();
-    }
-
-    private void UpdatePolarCoordinates()
-    {
-        Vector3 coordinates = earthModel.InverseTransformPoint(pinPosition);
-        coordinates.y = 90f - Mathf.Acos(coordinates.y / coordinates.magnitude) * Mathf.Rad2Deg;
-        coordinates.x = Mathf.Atan2(coordinates.z, coordinates.x) * Mathf.Rad2Deg;
-
-        location.latitude = (float)Math.Round(coordinates.y, 2);
-        location.longitude = (float)Math.Round(coordinates.x, 2);
     }
 
     private void UpdateMenu()
     {
-        latLongText.LatLongTextUpdate();
+        coordinatesText.CoordinatesTextUpdate();
     }
 }
