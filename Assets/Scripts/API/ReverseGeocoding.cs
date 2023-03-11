@@ -16,10 +16,52 @@ public class ReverseGeocoding : MonoBehaviour
 
     public void UpdateLocationNameAndCountryCode()
     {
-        StartCoroutine(FetchData());
+        string countryName;
+        ResetLocationNameAndCountryCode();
+
+        StartCoroutine(FetchNominatimData((nominatim) =>
+        {
+            if (nominatim == null)
+            {
+                return;
+            }
+            else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
+            {
+                location.locationName = "Null Island";
+                return;
+            }
+
+            location.locationName = GetLocationName(nominatim.address.otherData);
+            location.countryCode = nominatim.address.countryCode;
+            countryName = nominatim.address.country;
+
+            // If no location name has been found in the Nominatim API, or there is at least one non-latin character in the string
+            if (location.locationName == null || !Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
+            {
+                StartCoroutine(FetchNameTranslation(nominatim.osmType, nominatim.osmId, (translation) =>
+                {
+                    if (location.locationName == null && translation == null)
+                        return;
+                    else if (translation != null)
+                        location.locationName = translation;
+
+                    // The location name is either non-latin or a translation, so you can add the country name
+                    if (countryName != null)
+                        location.locationName += ", " + countryName;
+                }));
+            }
+            else if (countryName != null)
+                location.locationName += ", " + countryName;
+        }));
     }
 
-    private IEnumerator FetchData()
+    private void ResetLocationNameAndCountryCode()
+    {
+        location.locationName = null;
+        location.countryCode = null;
+    }
+
+    private IEnumerator FetchNominatimData(Action<Nominatim> callback)
     {
         // Depending on the user's language, the dot in the float will become a comma when inserted in a string
         string latitude = StringFormat.Float(location.latitude);
@@ -28,7 +70,6 @@ public class ReverseGeocoding : MonoBehaviour
 
         string jsonText;
         Nominatim nominatim;
-        string countryName;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -37,7 +78,6 @@ public class ReverseGeocoding : MonoBehaviour
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request failed to fetch from the API.");
-                ResetLocationNameAndCountryCode();
                 yield break;
             }
 
@@ -47,35 +87,11 @@ public class ReverseGeocoding : MonoBehaviour
             if (nominatim.error != null)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({location.latitude},{location.longitude}).");
-                ResetLocationNameAndCountryCode();
                 yield break;
             }
 
-            countryName = nominatim.address.country;
-            location.countryCode = nominatim.address.countryCode;
-            location.locationName = GetLocationName(nominatim.address.otherData);
-
-            // If no location name has been found in the Nominatim API or if there is at least one non-latin character in the string
-            if (location.locationName == null || !Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
-                StartCoroutine(FetchNameTranslation(nominatim.osmType, nominatim.osmId));
-            // If the location is Null Island
-            else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
-                StartCoroutine(FetchNameTranslation("node", "3815077900"));
-
-            // If there's truly no location name, set it to "[Unknown location]"
-            if (location.locationName == null)
-                location.locationName = "[Lieu inconnu]";
-
-            // Add the country name
-            if (countryName != null)
-                location.locationName += ", " + countryName;
+            callback(nominatim);
         }
-    }
-
-    private void ResetLocationNameAndCountryCode()
-    {
-        location.locationName = null;
-        location.countryCode = null;
     }
 
     private string GetLocationName(Dictionary<string, JToken> otherAddressData)
@@ -85,7 +101,7 @@ public class ReverseGeocoding : MonoBehaviour
         string potentiallyNonLatinName = null;
         List<string> keysToRemove;
 
-        if (otherAddressData.Count == 0)
+        if (otherAddressData?.Count == 0)
             return null;
 
         // Find the index of the smallest allowed location
@@ -110,13 +126,14 @@ public class ReverseGeocoding : MonoBehaviour
         return otherAddressData.Count != 0 ? (string)otherAddressData.First().Value : potentiallyNonLatinName;
     }
 
-    private IEnumerator FetchNameTranslation(string osmType, string osmId)
+    private IEnumerator FetchNameTranslation(string osmType, string osmId, Action<string> callback)
     {
         string uri = $"https://www.openstreetmap.org/api/0.6/{osmType}/{osmId}";
         string xmlText;
         XmlSerializer serializer;
         OpenStreetMap osm;
-        string translation;
+        List<TagOSM> tags;
+        string translation = null;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -130,46 +147,30 @@ public class ReverseGeocoding : MonoBehaviour
             using (StringReader reader = new StringReader(xmlText))
                 osm = (OpenStreetMap)serializer.Deserialize(reader);
 
-            if (osm.relation != null)
-            {
-                translation = FindTranslation(osm.relation.tags);
-                if (translation != null)
-                    location.locationName = translation;
-            }
-            else if (osm.node != null)
-            {
-                translation = FindTranslation(osm.node.tags);
-                if (translation != null)
-                    location.locationName = translation;
-            }
-            else if (osm.way != null)
-            {
-                translation = FindTranslation(osm.way.tags);
-                if (translation != null)
-                    location.locationName = translation;
-            }
+            tags = osm.relation?.tags ?? osm.node?.tags ?? osm.way?.tags;
+            if (tags != null && tags.Count != 0)
+                translation = GetTranslation(tags);
+
+            callback(translation);
         }
     }
 
-    private string FindTranslation(List<TagOSM> tags)
+    private string GetTranslation(List<TagOSM> tags)
     {
-        string tagName;
         string french = null, english = null, international = null, native = null;
 
-        foreach (var tag in tags)
+        foreach (TagOSM tag in tags)
         {
-            tagName = tag.name;
-
-            if (tagName == "name:fr")
+            if (tag.name == "name:fr")
                 french = tag.value;
-            else if (tagName == "name:en")
+            else if (tag.name == "name:en")
                 english = tag.value;
-            else if (tagName == "int_name")
+            else if (tag.name == "int_name")
                 international = tag.value;
-            else if (tagName == "name")
+            else if (tag.name == "name")
                 native = tag.value;
         }
 
-        return french ?? english ?? international ?? native ?? null;
+        return french ?? english ?? international ?? native;
     }
 }
