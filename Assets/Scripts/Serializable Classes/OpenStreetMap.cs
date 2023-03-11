@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 [XmlRoot(ElementName = "osm")]
-public class OSM
+public class OpenStreetMap
 {
     [XmlElement(ElementName = "relation")]
     public RelationOSM relation;

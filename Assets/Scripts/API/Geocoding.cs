@@ -93,10 +93,10 @@ public class Geocoding : MonoBehaviour
 
                 // OpenMeteo may send locations which do not match with the user input, therefore check if display_name contains it
                 // RemoveDiacritics() is to remove accents (only for the check)
-                if (RemoveDiacritics(nominatim.display_name).Contains(RemoveDiacritics(userInput), StringComparison.OrdinalIgnoreCase))
+                if (RemoveDiacritics(nominatim.displayName).Contains(RemoveDiacritics(userInput), StringComparison.OrdinalIgnoreCase))
                 {
                     // display_name is null by default, this will give it a value
-                    locations[i].display_name = nominatim.display_name;
+                    locations[i].displayName = nominatim.displayName;
 
                     // Since we're already in a loop, seize the opportunity to perform this operation:
                     // Limit the coordinates up to 2 decimals after the floating point
@@ -107,7 +107,7 @@ public class Geocoding : MonoBehaviour
         }
 
         // Remove incorrect locations
-        locations.RemoveAll(element => element.display_name == null);
+        locations.RemoveAll(element => element.displayName == null);
 
         // TODO: Display the locations in the GUI
         // TODO: Allow the user to pick one
@@ -115,10 +115,10 @@ public class Geocoding : MonoBehaviour
         /*
             ONCE THE USER PICKS ONE OF THE DISPLAYED LOCATIONS:
 
-            location.locationName = locations[userChoice].display_name;
-            location.locationLat = locations[userChoice].latitude;
-            location.locationLon = locations[userChoice].longitude;
-            location.locationCountryCode = locations[userChoice].country_code;
+            location.locationName = locations[userChoice].displayName;
+            location.latitude = locations[userChoice].latitude;
+            location.longitude = locations[userChoice].longitude;
+            location.countryCode = locations[userChoice].countryCode;
         */
     }
 

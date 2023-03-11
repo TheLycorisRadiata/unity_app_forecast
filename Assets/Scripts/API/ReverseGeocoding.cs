@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,6 +28,7 @@ public class ReverseGeocoding : MonoBehaviour
 
         string jsonText;
         Nominatim nominatim;
+        string countryName;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -37,7 +42,7 @@ public class ReverseGeocoding : MonoBehaviour
             }
 
             jsonText = webRequest.downloadHandler.text;
-            nominatim = JsonUtility.FromJson<Nominatim>(jsonText);
+            nominatim = JsonConvert.DeserializeObject<Nominatim>(jsonText);
 
             if (nominatim.error != null)
             {
@@ -46,15 +51,24 @@ public class ReverseGeocoding : MonoBehaviour
                 yield break;
             }
 
-            location.locationName = GetLocationName(nominatim.address);
-            location.countryCode = nominatim.address.country_code;
+            countryName = nominatim.address.country;
+            location.countryCode = nominatim.address.countryCode;
+            location.locationName = GetLocationName(nominatim.address.otherData);
 
-            // If there is at least one non-latin character in the string
-            if (!Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
-                StartCoroutine(FetchNameTranslation(nominatim.osm_type, nominatim.osm_id));
+            // If no location name has been found in the Nominatim API or if there is at least one non-latin character in the string
+            if (location.locationName == null || !Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
+                StartCoroutine(FetchNameTranslation(nominatim.osmType, nominatim.osmId));
             // If the location is Null Island
-            else if (nominatim.osm_type == "node" && nominatim.osm_id == "3815077900")
+            else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
                 StartCoroutine(FetchNameTranslation("node", "3815077900"));
+
+            // If there's truly no location name, set it to "[Unknown location]"
+            if (location.locationName == null)
+                location.locationName = "[Lieu inconnu]";
+
+            // Add the country name
+            if (countryName != null)
+                location.locationName += ", " + countryName;
         }
     }
 
@@ -64,50 +78,36 @@ public class ReverseGeocoding : MonoBehaviour
         location.countryCode = null;
     }
 
-    private string GetLocationName(NominatimAddress address)
+    private string GetLocationName(Dictionary<string, JToken> otherAddressData)
     {
-        List<string> names = new List<string>();
-        string nativeName = null;
-        int i;
+        string[] smallestAllowedLocation = { "municipality", "city", "town", "village" };
+        int smallestIndex;
+        string potentiallyNonLatinName = null;
+        List<string> keysToRemove;
 
-        // Add all the non-null names
-        if (address.town != null)
-            names.Add(address.town);
-        if (address.city != null)
-            names.Add(address.city);
-        if (address.municipality != null)
-            names.Add(address.municipality);
-        if (address.village != null)
-            names.Add(address.village);
-        if (address.county != null)
-            names.Add(address.county);
-        if (address.province != null)
-            names.Add(address.province);
-        if (address.region != null)
-            names.Add(address.region);
-        if (address.state_district != null)
-            names.Add(address.state_district);
-        if (address.state != null)
-            names.Add(address.state);
-        if (address.country != null)
-            names.Add(address.country);
-        if (address.man_made != null)
-            names.Add(address.man_made);
+        if (otherAddressData.Count == 0)
+            return null;
 
-        // Save at least one name
-        nativeName = names[0];
+        // Find the index of the smallest allowed location
+        smallestIndex = otherAddressData.Keys.ToList().IndexOf(smallestAllowedLocation.FirstOrDefault(location => otherAddressData.ContainsKey(location)));
 
-        // Remove the non-latin names
-        for (i = 0; i < names.Count; ++i)
+        // Remove all elements before this location (0 or -1 are legal and will simply not remove anything)
+        otherAddressData = otherAddressData.Skip(smallestIndex).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        if (otherAddressData.Count != 0)
         {
-            // If there is at least one non-latin character in the string
-            if (!Regex.IsMatch(names[i], "[a-z]", RegexOptions.IgnoreCase))
-                names[i] = null;
+            // Save at least one location name
+            potentiallyNonLatinName = (string)otherAddressData.First().Value;
+
+            // Select all KVP whose value has at least one non-latin character
+            keysToRemove = otherAddressData.Where(kvp => !Regex.IsMatch((string)kvp.Value, "[a-z]", RegexOptions.IgnoreCase)).Select(kvp => kvp.Key).ToList();
+
+            // Remove the non-latin names
+            keysToRemove.ForEach(key => otherAddressData.Remove(key));
         }
-        names.RemoveAll(element => element == null);
 
         // Return the first latin name or the native one
-        return names.Count > 0 ? names[0] : nativeName;
+        return otherAddressData.Count != 0 ? (string)otherAddressData.First().Value : potentiallyNonLatinName;
     }
 
     private IEnumerator FetchNameTranslation(string osmType, string osmId)
@@ -115,7 +115,7 @@ public class ReverseGeocoding : MonoBehaviour
         string uri = $"https://www.openstreetmap.org/api/0.6/{osmType}/{osmId}";
         string xmlText;
         XmlSerializer serializer;
-        OSM osm;
+        OpenStreetMap osm;
         string translation;
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -126,9 +126,9 @@ public class ReverseGeocoding : MonoBehaviour
                 yield break;
 
             xmlText = webRequest.downloadHandler.text;
-            serializer = new XmlSerializer(typeof(OSM));
+            serializer = new XmlSerializer(typeof(OpenStreetMap));
             using (StringReader reader = new StringReader(xmlText))
-                osm = (OSM)(serializer.Deserialize(reader)) as OSM;
+                osm = (OpenStreetMap)serializer.Deserialize(reader);
 
             if (osm.relation != null)
             {
