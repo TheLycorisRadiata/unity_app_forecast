@@ -16,17 +16,21 @@ public class CountryFlag : MonoBehaviour
     IEnumerator LoadFlag()
     {
         string uri = "https://countryflagsapi.com/png/" + location.countryCode;
+        Texture2D texture;
 
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(uri);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
+        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(uri))
         {
-            Debug.Log($"Country flag API failed to fetch image of country code \"{location.countryCode}\".\n" + request.error);
-            yield break;
-        }
+            yield return webRequest.SendWebRequest();
 
-        Texture2D texture = DownloadHandlerTexture.GetContent(request);
-        flagImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"Country flag API failed to fetch image of country code \"{location.countryCode}\".\n" + webRequest.error);
+                flagImage.sprite = null;
+                yield break;
+            }
+
+            texture = DownloadHandlerTexture.GetContent(webRequest);
+            flagImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        }
     }
 }
