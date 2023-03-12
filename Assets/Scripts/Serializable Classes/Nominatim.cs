@@ -11,6 +11,25 @@ public class Nominatim
     [JsonProperty("osm_id")] public string osmId; /* string instead of a number, because some IDs are way too big */
     [JsonProperty("display_name")] public string displayName; /* Used for geocoding */
     public NominatimAddress address; /* Used for reverse geocoding (+ it contains a "countryCode" property) */
+
+    public Nominatim()
+    {
+        this.error = null;
+        this.osmType = null;
+        this.osmId = null;
+        this.displayName = null;
+        this.address = new NominatimAddress();
+    }
+
+    public Nominatim(string jsonText)
+    {
+        Nominatim obj = JsonConvert.DeserializeObject<Nominatim>(jsonText);
+        this.error = obj.error;
+        this.osmType = obj.osmType;
+        this.osmId = obj.osmId;
+        this.displayName = obj.displayName;
+        this.address = obj.address;
+    }
 }
 
 public class NominatimAddress
@@ -29,4 +48,24 @@ public class NominatimAddress
     public string postcode;
     [JsonProperty("ISO3166-2-lvl4")] public string iso4;
     [JsonProperty("ISO3166-2-lvl6")] public string iso6;
+
+    public NominatimAddress()
+    {
+        this.countryCode = null;
+        this.country = null;
+        this.otherData = new Dictionary<string, JToken>();
+        this.postcode = null;
+        this.iso4 = null;
+        this.iso6 = null;
+    }
+
+    public NominatimAddress(string countryCode, string country, Dictionary<string, JToken> otherData)
+    {
+        this.countryCode = countryCode;
+        this.country = country;
+        this.otherData = otherData;
+        this.postcode = null;
+        this.iso4 = null;
+        this.iso6 = null;
+    }
 }

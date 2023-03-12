@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 using System.Linq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -82,7 +79,7 @@ public class ReverseGeocoding : MonoBehaviour
             }
 
             jsonText = webRequest.downloadHandler.text;
-            nominatim = JsonConvert.DeserializeObject<Nominatim>(jsonText);
+            nominatim = new Nominatim(jsonText);
 
             if (nominatim.error != null)
             {
@@ -130,8 +127,6 @@ public class ReverseGeocoding : MonoBehaviour
     {
         string uri = $"https://www.openstreetmap.org/api/0.6/{osmType}/{osmId}";
         string xmlText;
-        XmlSerializer serializer;
-        OpenStreetMap osm;
         List<TagOSM> tags;
         string translation = null;
 
@@ -143,12 +138,8 @@ public class ReverseGeocoding : MonoBehaviour
                 yield break;
 
             xmlText = webRequest.downloadHandler.text;
-            serializer = new XmlSerializer(typeof(OpenStreetMap));
-            using (StringReader reader = new StringReader(xmlText))
-                osm = (OpenStreetMap)serializer.Deserialize(reader);
-
-            tags = osm.relation?.tags ?? osm.node?.tags ?? osm.way?.tags;
-            if (tags != null && tags.Count != 0)
+            tags = new OpenStreetMap(xmlText).GetTags();
+            if (tags.Count != 0)
                 translation = GetTranslation(tags);
 
             callback(translation);

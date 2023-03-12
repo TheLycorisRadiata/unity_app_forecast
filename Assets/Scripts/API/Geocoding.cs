@@ -53,7 +53,7 @@ public class Geocoding : MonoBehaviour
             }
 
             jsonText = webRequest.downloadHandler.text;
-            geocoding = JsonUtility.FromJson<OpenMeteoGeocoding>(jsonText);
+            geocoding = new OpenMeteoGeocoding(jsonText);
 
             if (geocoding.results == null)
             {
@@ -83,7 +83,7 @@ public class Geocoding : MonoBehaviour
                 }
 
                 jsonText = webRequest.downloadHandler.text;
-                nominatim = JsonUtility.FromJson<Nominatim>(jsonText);
+                nominatim = new Nominatim(jsonText);
 
                 if (nominatim.error != null)
                 {
