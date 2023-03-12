@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -14,6 +12,7 @@ public class Geocoding : MonoBehaviour
     // For debug purposes - To delete later
     [SerializeField] private string userInput;
     [SerializeField] private bool isButtonClicked = false;
+    [SerializeField] private int userChoice;
 
     void Update()
     {
@@ -27,21 +26,38 @@ public class Geocoding : MonoBehaviour
 
     public void FetchLocationList()
     {
-        StartCoroutine(FetchData());
+        // TODO: The operation can take some time, so implement a loading spinner to make the user be patient
+
+        StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
+        {
+            if (locations == null)
+                return;
+
+            StartCoroutine(FetchNominatimDisplayNames(locations, (locations) =>
+            {
+                // TODO: Display the locations in the GUI
+                // TODO: Allow the user to pick one
+                userChoice = 0;
+
+                locations.ForEach(e => Debug.Log(e.displayName));
+                Debug.Log("---------------");
+
+                // ONCE THE USER PICKS ONE OF THE DISPLAYED LOCATIONS:
+                location.locationName = locations[userChoice].displayName;
+                location.latitude = locations[userChoice].latitude;
+                location.longitude = locations[userChoice].longitude;
+                location.countryCode = locations[userChoice].countryCode;
+            }));
+        }));
     }
 
-    private IEnumerator FetchData()
+    private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
     {
         string encodedInput = HttpUtility.UrlEncode(userInput);
         string uri = $"https://geocoding-api.open-meteo.com/v1/search?name={encodedInput}";
         string jsonText;
-        string latitude, longitude;
         OpenMeteoGeocoding geocoding;
-        Nominatim nominatim;
-        List<OmgLocation> locations;
-        int i;
 
-        // Fetch the OpenMeteo geocoding location data
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             yield return webRequest.SendWebRequest();
@@ -61,11 +77,18 @@ public class Geocoding : MonoBehaviour
                 yield break;
             }
 
-            locations = geocoding.results;
+            callback(geocoding.results);
         }
+    }
 
-        // Fetch the Nominatim display_name for each location
-        // TODO: The operation can take some time, so implement a loading spinner to make the user be patient
+    private IEnumerator FetchNominatimDisplayNames(List<OmgLocation> locations, Action<List<OmgLocation>> callback)
+    {
+        string latitude, longitude;
+        string uri, jsonText;
+        Nominatim nominatim;
+        int i;
+
+        /* Fetch the Nominatim "display name" for each location */
         for (i = 0; i < locations.Count; ++i)
         {
             latitude = StringFormat.Float(locations[i].latitude);
@@ -91,45 +114,28 @@ public class Geocoding : MonoBehaviour
                     continue;
                 }
 
-                // OpenMeteo may send locations which do not match with the user input, therefore check if display_name contains it
-                // RemoveDiacritics() is to remove accents (only for the check)
-                if (RemoveDiacritics(nominatim.displayName).Contains(RemoveDiacritics(userInput), StringComparison.OrdinalIgnoreCase))
+                /*
+                    OpenMeteo may send locations which do not match with the user input, therefore check if displayName contains the input.
+                    RemoveDiacritics() is to remove accents (only for the check).
+                */
+                if (StringFormat.RemoveDiacritics(nominatim.displayName).Contains(StringFormat.RemoveDiacritics(userInput), StringComparison.OrdinalIgnoreCase))
                 {
-                    // display_name is null by default, this will give it a value
+                    /* displayName is null by default, this will give it a value */
                     locations[i].displayName = nominatim.displayName;
 
-                    // Since we're already in a loop, seize the opportunity to perform this operation:
-                    // Limit the coordinates up to 2 decimals after the floating point
+                    /*
+                        Since we're already in a loop, seize the opportunity to perform this operation:
+                        Limit the coordinates up to 2 decimals after the floating point.
+                    */
                     locations[i].latitude = (float)Math.Round(locations[i].latitude, 2);
                     locations[i].longitude = (float)Math.Round(locations[i].longitude, 2);
                 }
             }
         }
 
-        // Remove incorrect locations
-        locations.RemoveAll(element => element.displayName == null);
+        /* Remove incorrect locations */
+        locations.RemoveAll(element => element?.displayName == null);
 
-        // TODO: Display the locations in the GUI
-        // TODO: Allow the user to pick one
-
-        /*
-            ONCE THE USER PICKS ONE OF THE DISPLAYED LOCATIONS:
-
-            location.locationName = locations[userChoice].displayName;
-            location.latitude = locations[userChoice].latitude;
-            location.longitude = locations[userChoice].longitude;
-            location.countryCode = locations[userChoice].countryCode;
-        */
-    }
-
-    // \p{Mn} or \p{Non_Spacing_Mark}: a character intended to be combined with another character without taking up extra space (e.g. accents, umlauts, etc)
-    private readonly static Regex nonSpacingMarkRegex = new Regex(@"\p{Mn}", RegexOptions.Compiled);
-    static string RemoveDiacritics(string text)
-    {
-        if (text == null)
-            return string.Empty;
-
-        string normalizedText = text.Normalize(NormalizationForm.FormD);
-        return nonSpacingMarkRegex.Replace(normalizedText, string.Empty);
+        callback(locations);
     }
 }
