@@ -9,61 +9,12 @@ using UnityEngine.Networking;
 
 public class ReverseGeocoding : MonoBehaviour
 {
-    [SerializeField] private LocationScriptableObject location;
-
-    public void UpdateLocationNameAndCountryCode()
-    {
-        string countryName;
-        ResetLocationNameAndCountryCode();
-
-        StartCoroutine(FetchNominatimData((nominatim) =>
-        {
-            if (nominatim == null)
-            {
-                return;
-            }
-            else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
-            {
-                location.locationName = "Null Island";
-                return;
-            }
-
-            location.locationName = GetLocationName(nominatim.address.otherData);
-            location.countryCode = nominatim.address.countryCode;
-            countryName = nominatim.address.country;
-
-            // If no location name has been found in the Nominatim API, or there is at least one non-latin character in the string
-            if (location.locationName == null || !Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
-            {
-                StartCoroutine(FetchNameTranslation(nominatim.osmType, nominatim.osmId, (translation) =>
-                {
-                    if (location.locationName == null && translation == null)
-                        return;
-                    else if (translation != null)
-                        location.locationName = translation;
-
-                    // The location name is either non-latin or a translation, so you can add the country name
-                    if (countryName != null)
-                        location.locationName += ", " + countryName;
-                }));
-            }
-            else if (countryName != null)
-                location.locationName += ", " + countryName;
-        }));
-    }
-
-    private void ResetLocationNameAndCountryCode()
-    {
-        location.locationName = null;
-        location.countryCode = null;
-    }
-
-    private IEnumerator FetchNominatimData(Action<Nominatim> callback)
+    public IEnumerator FetchNominatimData(float latitude, float longitude, Action<Nominatim> callback)
     {
         // Depending on the user's language, the dot in the float will become a comma when inserted in a string
-        string latitude = StringFormat.Float(location.latitude);
-        string longitude = StringFormat.Float(location.longitude);
-        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=fr,en&format=json";
+        string strLatitude = StringFormat.Float(latitude);
+        string strLongitude = StringFormat.Float(longitude);
+        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={strLatitude}&lon={strLongitude}&accept-language=fr,en&format=json";
 
         string jsonText;
         Nominatim nominatim;
@@ -83,7 +34,7 @@ public class ReverseGeocoding : MonoBehaviour
 
             if (nominatim.error != null)
             {
-                Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({location.latitude},{location.longitude}).");
+                Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({latitude},{longitude}).");
                 yield break;
             }
 
@@ -91,7 +42,7 @@ public class ReverseGeocoding : MonoBehaviour
         }
     }
 
-    private string GetLocationName(Dictionary<string, JToken> otherAddressData)
+    public string GetLocationNameFromNominatimData(Dictionary<string, JToken> otherAddressData)
     {
         string[] smallestAllowedLocation = { "municipality", "city", "town", "village" };
         int smallestIndex;
@@ -123,7 +74,7 @@ public class ReverseGeocoding : MonoBehaviour
         return otherAddressData.Count != 0 ? (string)otherAddressData.First().Value : potentiallyNonLatinName;
     }
 
-    private IEnumerator FetchNameTranslation(string osmType, string osmId, Action<string> callback)
+    public IEnumerator FetchNameTranslationFromOSM(string osmType, string osmId, Action<string> callback)
     {
         string uri = $"https://www.openstreetmap.org/api/0.6/{osmType}/{osmId}";
         string xmlText;

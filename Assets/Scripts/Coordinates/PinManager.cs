@@ -6,14 +6,12 @@ public class PinManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
     [SerializeField] private Raycast raycast;
-    [SerializeField] private PolarCoordinates polarCoordinates;
-    [SerializeField] private ReverseGeocoding reverseGeocoding;
     [SerializeField] private CountryFlag countryFlag;
     [SerializeField] private CoordinatesText coordinatesText;
 
     [SerializeField] private GameObject pinPrefab;
     [SerializeField] private Transform earthModel;
-    [SerializeField] private LocationScriptableObject location;
+    [SerializeField] private LocationScriptableObjectScript locationScript;
 
     [SerializeField] private UnityEvent OpenMenu;
 
@@ -44,14 +42,14 @@ public class PinManager : MonoBehaviour
         if (isPinned == false)
         {
             CreatePin();
-            UpdateLocationData();
+            locationScript.UpdateLocation(pinPosition);
             UpdateMenu();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
-            UpdateLocationData();
+            locationScript.UpdateLocation(pinPosition);
             UpdateMenu();
         }
     }
@@ -69,12 +67,6 @@ public class PinManager : MonoBehaviour
         pin.transform.position = pinPosition;
         pin.transform.rotation = pinRotation;
         pin.SetActive(true);
-    }
-
-    private void UpdateLocationData()
-    {
-        polarCoordinates.UpdateLocationCoordinates(pinPosition);
-        reverseGeocoding.UpdateLocationNameAndCountryCode();
     }
 
     private void UpdateMenu()
