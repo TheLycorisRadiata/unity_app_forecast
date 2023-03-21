@@ -26,6 +26,7 @@ public class ReverseGeocoding : MonoBehaviour
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request failed to fetch from the API.");
+                callback(null);
                 yield break;
             }
 
@@ -35,6 +36,7 @@ public class ReverseGeocoding : MonoBehaviour
             if (nominatim.error != null)
             {
                 Debug.LogWarning($"Reverse geocoding error: The request went through but the API couldn't find a location from these coordinates ({latitude},{longitude}).");
+                callback(null);
                 yield break;
             }
 
@@ -86,7 +88,10 @@ public class ReverseGeocoding : MonoBehaviour
             yield return webRequest.SendWebRequest();
 
             if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                callback(null);
                 yield break;
+            }
 
             xmlText = webRequest.downloadHandler.text;
             tags = new OpenStreetMap(xmlText).GetTags();

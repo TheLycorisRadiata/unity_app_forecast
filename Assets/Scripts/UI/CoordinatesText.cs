@@ -3,13 +3,12 @@ using TMPro;
 
 public class CoordinatesText : MonoBehaviour
 {
-    public LocationScriptableObject location;
-    public TextMeshProUGUI latitude;
-    public TextMeshProUGUI longitude;
+    [SerializeField] private TextMeshProUGUI latitude;
+    [SerializeField] private TextMeshProUGUI longitude;
     
-    public void CoordinatesTextUpdate()
+    public void CoordinatesTextUpdate(float fLatitude, float fLongitude)
     {
-        latitude.text = "Latitude: " + location.latitude;
-        longitude.text = "Longitude: " + location.longitude;
+        latitude.text = "Latitude: " + fLatitude;
+        longitude.text = "Longitude: " + fLongitude;
     }
 }

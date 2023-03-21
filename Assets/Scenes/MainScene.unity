@@ -1166,8 +1166,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 1934136699}
   raycast: {fileID: 330585548}
-  countryFlag: {fileID: 518785835}
-  coordinatesText: {fileID: 321441501}
   pinPrefab: {fileID: 4270217806825383221, guid: a7b965d4eac90e2458efd86c92ba786c,
     type: 3}
   earthModel: {fileID: 543450653683642245}
@@ -1226,9 +1224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ed41cc231d1e146971b6b8931b47c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
   polarCoordinates: {fileID: 609774751}
   reverseGeocoding: {fileID: 1788594878}
-  location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
+  countryFlag: {fileID: 518785835}
+  coordinatesText: {fileID: 321441501}
 --- !u!1 &1664665466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,7 +1393,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aa66b3480fa48948a09b961a906f9da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
 --- !u!1 &1901076958
 GameObject:
   m_ObjectHideFlags: 0

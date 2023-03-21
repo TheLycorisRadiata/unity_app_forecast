@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,13 +5,9 @@ public class PinManager : MonoBehaviour
 {
     [SerializeField] private UserInput input;
     [SerializeField] private Raycast raycast;
-    [SerializeField] private CountryFlag countryFlag;
-    [SerializeField] private CoordinatesText coordinatesText;
-
     [SerializeField] private GameObject pinPrefab;
     [SerializeField] private Transform earthModel;
     [SerializeField] private LocationScriptableObjectScript locationScript;
-
     [SerializeField] private UnityEvent OpenMenu;
 
     private GameObject pin;
@@ -43,14 +38,12 @@ public class PinManager : MonoBehaviour
         {
             CreatePin();
             locationScript.UpdateLocation(pinPosition);
-            UpdateMenu();
             OpenMenu.Invoke();
         }
         else
         {
             MovePin();
             locationScript.UpdateLocation(pinPosition);
-            UpdateMenu();
         }
     }
 
@@ -67,11 +60,5 @@ public class PinManager : MonoBehaviour
         pin.transform.position = pinPosition;
         pin.transform.rotation = pinRotation;
         pin.SetActive(true);
-    }
-
-    private void UpdateMenu()
-    {
-        coordinatesText.CoordinatesTextUpdate();
-        countryFlag.UpdateFlag();
     }
 }

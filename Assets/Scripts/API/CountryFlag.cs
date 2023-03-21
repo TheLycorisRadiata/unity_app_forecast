@@ -6,16 +6,15 @@ using UnityEngine.UI;
 public class CountryFlag : MonoBehaviour
 {
     [SerializeField] private Image flagImage;
-    [SerializeField] private LocationScriptableObject location;
 
-    public void UpdateFlag()
+    public void UpdateFlag(string countryCode)
     {
-        StartCoroutine(LoadFlag());
+        StartCoroutine(LoadFlag(countryCode));
     }
 
-    IEnumerator LoadFlag()
+    IEnumerator LoadFlag(string countryCode)
     {
-        string uri = "https://countryflagsapi.com/png/" + location.countryCode;
+        string uri = $"https://flagcdn.com/w320/{countryCode}.png";
         Texture2D texture;
 
         using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(uri))
@@ -24,13 +23,18 @@ public class CountryFlag : MonoBehaviour
 
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log($"Country flag API failed to fetch image of country code \"{location.countryCode}\".\n" + webRequest.error);
-                flagImage.sprite = null;
+                Debug.Log($"Country flag API failed to fetch image of country code \"{countryCode}\".\n" + webRequest.error);
+                ResetFlag();
                 yield break;
             }
 
             texture = DownloadHandlerTexture.GetContent(webRequest);
             flagImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
+    }
+
+    public void ResetFlag()
+    {
+        flagImage.sprite = null;
     }
 }
