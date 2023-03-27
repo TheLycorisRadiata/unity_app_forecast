@@ -31,6 +31,14 @@ public class Geocoding : MonoBehaviour
         - Bouton pour afficher/cacher la liste : Un oeil / Un oeil barré.
     */
 
+    /*
+        METEO
+        https://github.com/PolyMarsDev/Real-World-Weather/
+        https://open-meteo.com/
+        https://open-meteo.com/en/docs#latitude=43.72&longitude=7.30&hourly=temperature_2m
+        https://api.open-meteo.com/v1/forecast?latitude=43.72&longitude=7.30&hourly=temperature_2m
+    */
+
     /* OnClick event in the menu */
     public void FetchLocationList()
     {
