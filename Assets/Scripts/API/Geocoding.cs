@@ -9,17 +9,22 @@ using TMPro;
 public class Geocoding : MonoBehaviour
 {
     [SerializeField] private LocationScriptableObject location;
-    [SerializeField] private TMP_InputField userInput;
 
-    // TODO: Delete when not needed anymore
-    [SerializeField] private int userChoice;
+    [SerializeField] private TMP_InputField userInput;
+    private int userChoice;
+
+    private List<OmgLocation> locationList;
+    [SerializeField] private TextMeshProUGUI listCount;
+    [SerializeField] private Transform locationListContent;
+    [SerializeField] private GameObject locationListPrefab;
 
     /*
         TODO:
 
-        - Valider --> Afficher la liste des lieux, scrollable.
-        - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu.
+        - Le scale du gameobject du lieu augmente pour une quelconque raison. Ca doit rester à 1.
+        - Cliquer sur un lieu --> Mettre le scriptable object à jour.
         - Bloquer l'épinglage et le déplacement avec l'input du clavier.
+        - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu.
 
         ---
 
@@ -33,29 +38,51 @@ public class Geocoding : MonoBehaviour
         if (userInput.text == "")
             return;
 
-        // TODO: The operation can take some time, so implement a loading spinner to make the user be patient
+        EmptyList();
+
+        // TODO: The operation can take some time, so implement a loading spinner
 
         StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
         {
             if (locations == null)
                 return;
 
-            StartCoroutine(FetchNominatimDisplayNames(locations, (locations) =>
-            {
-                // TODO: Display the locations in the GUI
-                // TODO: Allow the user to pick one
-                userChoice = 0;
-
-                locations.ForEach(e => Debug.Log(e.displayName));
-                Debug.Log("---------------");
-
-                // ONCE THE USER PICKS ONE OF THE DISPLAYED LOCATIONS:
-                location.locationName = locations[userChoice].displayName;
-                location.latitude = locations[userChoice].latitude;
-                location.longitude = locations[userChoice].longitude;
-                location.countryCode = locations[userChoice].countryCode;
-            }));
+            StartCoroutine(FetchNominatimDisplayNames(locations, (locations) => PopulateMenu(locations)));
         }));
+    }
+
+    private void EmptyList()
+    {
+        int i;
+        locationList = new List<OmgLocation>();
+        listCount.text = "0 lieu";
+        for (i = 0; i < locationListContent.childCount; ++i)
+            Destroy(locationListContent.GetChild(i).gameObject);
+    }
+
+    private void PopulateMenu(List<OmgLocation> locations)
+    {
+        int i;
+        locationList = locations;
+        listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
+        for (i = 0; i < locationList.Count; ++i)
+        {
+            Transform t = Instantiate(locationListPrefab, Vector3.zero, Quaternion.identity).transform;
+            t.SetParent(locationListContent);
+            t.GetChild(0).GetComponent<TextMeshProUGUI>().text = locationList[i].displayName;
+        }
+    }
+
+    private void PickLocation()
+    {
+        // TODO: Allow the user to pick a location
+        userChoice = 0;
+
+        // ONCE THE USER PICKS ONE OF THE DISPLAYED LOCATIONS:
+        location.locationName = locationList[userChoice].displayName;
+        location.latitude = locationList[userChoice].latitude;
+        location.longitude = locationList[userChoice].longitude;
+        location.countryCode = locationList[userChoice].countryCode;
     }
 
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
