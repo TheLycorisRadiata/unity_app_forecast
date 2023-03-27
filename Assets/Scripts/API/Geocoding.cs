@@ -4,28 +4,35 @@ using System.Collections.Generic;
 using System.Web;
 using UnityEngine;
 using UnityEngine.Networking;
+using TMPro;
 
 public class Geocoding : MonoBehaviour
 {
     [SerializeField] private LocationScriptableObject location;
+    [SerializeField] private TMP_InputField userInput;
 
-    // For debug purposes - To delete later
-    [SerializeField] private string userInput;
-    [SerializeField] private bool isButtonClicked = false;
+    // TODO: Delete when not needed anymore
     [SerializeField] private int userChoice;
 
-    void Update()
-    {
-        if (isButtonClicked && userInput != "")
-        {
-            isButtonClicked = false;
-            FetchLocationList();
-        }
-    }
-    // -----------------------------------
+    /*
+        TODO:
 
+        - Valider --> Afficher la liste des lieux, scrollable
+        - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu
+        - Ne pas fermer la liste à moins qu'un certain bouton soit cliqué. La liste n'est d'ailleurs pas supprimée, juste cachée. CE BOUTON EST UNE FLECHE (ou deux, comme sur mon site pour la FAQ).
+
+        ---
+
+        - Bouton pour valider : Une loupe.
+        - Bloquer l'épinglage et le déplacement avec l'input du clavier.
+    */
+
+    /* OnClick event in the menu */
     public void FetchLocationList()
     {
+        if (userInput.text == "")
+            return;
+
         // TODO: The operation can take some time, so implement a loading spinner to make the user be patient
 
         StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
@@ -53,7 +60,7 @@ public class Geocoding : MonoBehaviour
 
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
     {
-        string encodedInput = HttpUtility.UrlEncode(userInput);
+        string encodedInput = HttpUtility.UrlEncode(userInput.text);
         string uri = $"https://geocoding-api.open-meteo.com/v1/search?name={encodedInput}";
         string jsonText;
         OpenMeteoGeocoding geocoding;
@@ -118,7 +125,7 @@ public class Geocoding : MonoBehaviour
                     OpenMeteo may send locations which do not match with the user input, therefore check if displayName contains the input.
                     RemoveDiacritics() is to remove accents (only for the check).
                 */
-                if (StringFormat.RemoveDiacritics(nominatim.displayName).Contains(StringFormat.RemoveDiacritics(userInput), StringComparison.OrdinalIgnoreCase))
+                if (StringFormat.RemoveDiacritics(nominatim.displayName).Contains(StringFormat.RemoveDiacritics(userInput.text), StringComparison.OrdinalIgnoreCase))
                 {
                     /* displayName is null by default, this will give it a value */
                     locations[i].displayName = nominatim.displayName;
