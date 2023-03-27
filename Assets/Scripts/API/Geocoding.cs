@@ -17,14 +17,14 @@ public class Geocoding : MonoBehaviour
     /*
         TODO:
 
-        - Valider --> Afficher la liste des lieux, scrollable
-        - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu
-        - Ne pas fermer la liste à moins qu'un certain bouton soit cliqué. La liste n'est d'ailleurs pas supprimée, juste cachée. CE BOUTON EST UNE FLECHE (ou deux, comme sur mon site pour la FAQ).
+        - Valider --> Afficher la liste des lieux, scrollable.
+        - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu.
+        - Bloquer l'épinglage et le déplacement avec l'input du clavier.
 
         ---
 
         - Bouton pour valider : Une loupe.
-        - Bloquer l'épinglage et le déplacement avec l'input du clavier.
+        - Bouton pour afficher/cacher la liste : Un oeil / Un oeil barré.
     */
 
     /* OnClick event in the menu */
