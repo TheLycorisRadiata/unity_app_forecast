@@ -1840,12 +1840,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
-  listCount: {fileID: 321769259}
   userInput: {fileID: 119056603}
+  listCount: {fileID: 321769259}
   locationListContent: {fileID: 1410865544}
   locationListPrefab: {fileID: 2556512962515625281, guid: 564cb98b86dd80c469a5617b3df65a7f,
     type: 3}
-  userChoice: 0
 --- !u!1 &1351076884
 GameObject:
   m_ObjectHideFlags: 0
@@ -2142,7 +2141,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -880, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1410865545
 MonoBehaviour:
@@ -2183,7 +2182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_VerticalFit: 1
 --- !u!1 &1441736966
 GameObject:
   m_ObjectHideFlags: 0

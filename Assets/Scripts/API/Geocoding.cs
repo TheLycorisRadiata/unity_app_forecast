@@ -21,7 +21,6 @@ public class Geocoding : MonoBehaviour
     /*
         TODO:
 
-        - Le scale du gameobject du lieu augmente pour une quelconque raison. Ca doit rester à 1.
         - Cliquer sur un lieu --> Mettre le scriptable object à jour.
         - Bloquer l'épinglage et le déplacement avec l'input du clavier.
         - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu.
@@ -67,8 +66,9 @@ public class Geocoding : MonoBehaviour
         listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
         for (i = 0; i < locationList.Count; ++i)
         {
-            Transform t = Instantiate(locationListPrefab, Vector3.zero, Quaternion.identity).transform;
+            Transform t = Instantiate(locationListPrefab, locationListContent.position, Quaternion.identity).transform;
             t.SetParent(locationListContent);
+            t.localScale = new Vector3(1f, 1f, 1f);
             t.GetChild(0).GetComponent<TextMeshProUGUI>().text = locationList[i].displayName;
         }
     }
