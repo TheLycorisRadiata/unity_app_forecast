@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using UnityEngine;
+using TMPro;
 
 public class LocationScriptableObjectScript : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class LocationScriptableObjectScript : MonoBehaviour
     /* To update the menu */
     [SerializeField] private CoordinatesText coordinatesText;
     [SerializeField] private CountryFlag countryFlag;
+    [SerializeField] private TextMeshProUGUI menuLocationName;
+    private string menuLocationNameDefault;
+
+    void Start()
+    {
+        menuLocationNameDefault = menuLocationName.text;
+    }
 
     public void UpdateLocation(Vector3 pinPosition)
     {
@@ -41,6 +49,7 @@ public class LocationScriptableObjectScript : MonoBehaviour
             if (nominatim == null)
             {
                 countryFlag.ResetFlag();
+                menuLocationName.text = menuLocationNameDefault;
                 return;
             }
             else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
@@ -51,7 +60,6 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
             UpdateCountryCode(nominatim.address.countryCode);
             UpdateLocationName(nominatim);
-            
         }));
     }
 
@@ -78,10 +86,16 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
                 // The location name is either non-latin or a translation, so you can add the country name
                 if (countryName != null)
-                    location.locationName += ", " + countryName;
+                    SetLocationName(countryName);
             }));
         }
         else if (countryName != null)
-            location.locationName += ", " + countryName;
+            SetLocationName(countryName);
+    }
+
+    private void SetLocationName(string countryName)
+    {
+        location.locationName += ", " + countryName;
+        menuLocationName.text = location.locationName;
     }
 }
