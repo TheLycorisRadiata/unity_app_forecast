@@ -26,6 +26,14 @@ public class LocationScriptableObjectScript : MonoBehaviour
         UpdateLocationNameAndCountryCode();
     }
 
+    public void UpdateLocation(OmgLocation geolocation)
+    {
+        location.locationName = geolocation.displayName;
+        menuLocationName.text = location.locationName;
+        UpdateLocationCoordinates(geolocation.latitude, geolocation.longitude);
+        UpdateCountryCode(geolocation.countryCode);
+    }
+
     private void ResetLocationData()
     {
         location.locationName = null;
@@ -40,6 +48,13 @@ public class LocationScriptableObjectScript : MonoBehaviour
         location.latitude = coord.y;
         location.longitude = coord.x;
         coordinatesText.CoordinatesTextUpdate(location.latitude, location.longitude);
+    }
+
+    private void UpdateLocationCoordinates(float latitude, float longitude)
+    {
+        location.latitude = latitude;
+        location.longitude = longitude;
+        coordinatesText.CoordinatesTextUpdate(latitude, longitude);
     }
 
     private void UpdateLocationNameAndCountryCode()
