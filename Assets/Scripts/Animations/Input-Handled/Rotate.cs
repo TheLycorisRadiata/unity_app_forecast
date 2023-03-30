@@ -12,6 +12,9 @@ public class Rotate : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (MenuPointer.isPointerOnMenu)
+            return;
+
         // horizontal --> rotation around X
         float pitch = UserInput.movementVector.x * rotateSpeed * Time.deltaTime;
         // vertical --> rotation around Y

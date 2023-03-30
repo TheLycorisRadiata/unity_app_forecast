@@ -21,7 +21,6 @@ public class Geocoding : MonoBehaviour
 
     /*
         TODO:
-        - Bloquer l'épinglage et le déplacement avec l'input du clavier.
         - Cliquer sur un lieu --> Epingler le lieu sur le globe, avec les coordonnées etc qui sont mises à jour dans le menu.
 
         ---

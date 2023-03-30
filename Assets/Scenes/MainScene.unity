@@ -1022,7 +1022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c743fba5ee645ef4d9fe3bd2c3e9c2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
+  hasHit: 0
   point: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &330585549
@@ -1037,7 +1037,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbceed7d7f87f344097777d7cc052570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,7 +1277,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c525798ebd4f1f48b5a378405d7918c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
 --- !u!114 &609774750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7621e55a20137534a93c15a0764a871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 1934136699}
   raycast: {fileID: 330585548}
   pinPrefab: {fileID: 4270217806825383221, guid: a7b965d4eac90e2458efd86c92ba786c,
     type: 3}
@@ -2872,11 +2869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c020c3263fce37f44b5bffe74a9737d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementVector: {x: 0, y: 0}
-  mousePosVector: {x: 0, y: 0}
-  scroll: 0
-  click: 0
-  cancel: 0
 --- !u!114 &1934136700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3267,6 +3259,8 @@ GameObject:
   - component: {fileID: 2123749002}
   - component: {fileID: 2123749001}
   - component: {fileID: 2123749003}
+  - component: {fileID: 2123749005}
+  - component: {fileID: 2123749004}
   m_Layer: 0
   m_Name: MenuPanel
   m_TagString: Untagged
@@ -3355,6 +3349,64 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &2123749004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123748999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ec43dc515829e489e037083283ac45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textInput: {fileID: 119056603}
+--- !u!114 &2123749005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123748999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2123749004}
+          m_TargetAssemblyTypeName: MenuPointer, Assembly-CSharp
+          m_MethodName: OnPointerEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2123749004}
+          m_TargetAssemblyTypeName: MenuPointer, Assembly-CSharp
+          m_MethodName: OnPointerExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!4 &543450653683642245
 Transform:
   m_ObjectHideFlags: 0

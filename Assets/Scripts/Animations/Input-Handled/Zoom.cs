@@ -15,7 +15,12 @@ public class Zoom : MonoBehaviour
 
     void LateUpdate()
     {
-        float newPosZ = Mathf.Clamp(transform.position.z + UserInput.scroll * stepPosZ, minPosZ, maxPosZ);
+        float newPosZ;
+
+        if (MenuPointer.isPointerOnMenu)
+            return;
+
+        newPosZ = Mathf.Clamp(transform.position.z + UserInput.scroll * stepPosZ, minPosZ, maxPosZ);
         transform.position = new Vector3(transform.position.x, transform.position.y, newPosZ);
 
         if (UserInput.cancel)

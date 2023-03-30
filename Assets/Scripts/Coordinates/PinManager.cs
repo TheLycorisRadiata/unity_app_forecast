@@ -21,7 +21,7 @@ public class PinManager : MonoBehaviour
 
     void Update()
     {
-        if (UserInput.click && raycast.hasHit)
+        if (UserInput.click && raycast.hasHit && !MenuPointer.isPointerOnMenu)
         {
             PinWithRaycast();
             UserInput.click = false;
