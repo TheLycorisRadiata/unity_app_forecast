@@ -22,7 +22,7 @@ public class PinManager : MonoBehaviour
 
     void Update()
     {
-        if (input.click)
+        if (input.click && raycast.hasHit)
         {
             PinWithRaycast();
             input.click = false;
