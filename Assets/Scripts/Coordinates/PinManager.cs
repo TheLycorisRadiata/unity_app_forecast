@@ -3,7 +3,6 @@ using UnityEngine.Events;
 
 public class PinManager : MonoBehaviour
 {
-    [SerializeField] private UserInput input;
     [SerializeField] private Raycast raycast;
     [SerializeField] private GameObject pinPrefab;
     [SerializeField] private Transform earthModel;
@@ -22,10 +21,10 @@ public class PinManager : MonoBehaviour
 
     void Update()
     {
-        if (input.click && raycast.hasHit)
+        if (UserInput.click && raycast.hasHit)
         {
             PinWithRaycast();
-            input.click = false;
+            UserInput.click = false;
         }
     }
 

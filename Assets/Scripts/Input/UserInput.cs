@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 public class UserInput : MonoBehaviour
 {
-    public Vector2 movementVector, mousePosVector;
-    public float scroll;
-    public bool click, cancel;
+    public static Vector2 movementVector, mousePosVector;
+    public static float scroll;
+    public static bool click, cancel;
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
