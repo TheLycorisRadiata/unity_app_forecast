@@ -12,6 +12,7 @@ public class Geocoding : MonoBehaviour
 {
     [SerializeField] private LocationScriptableObject location;
     [SerializeField] private LocationScriptableObjectScript locationScript;
+    [SerializeField] private EarthAnimator earthAnimator;
     [SerializeField] private TMP_InputField userInput;
 
     private List<OmgLocation> locationList;
@@ -85,6 +86,7 @@ public class Geocoding : MonoBehaviour
     {
         StyleLocationElements(locationListContent.GetChild(index));
         locationScript.UpdateLocation(locationList[index]);
+        earthAnimator.RotateEarthToCenterLocation(location.latitude, location.longitude);
     }
 
     private void StyleLocationElements(Transform selectedElement)
