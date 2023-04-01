@@ -53,16 +53,24 @@ public class EarthAnimator : MonoBehaviour
 
     public void RotateEarthToCenterLocation(float latitude, float longitude)
     {
-        /* Not certain */
-        Vector2 initialCenterCoordinates = new Vector2(40f, 20f);
-
-        /* Then the menu is opened and Earth is put to the side: posX is (posX-distance) and rotY is (rotY-15) */
-
+        Vector2 initialCenterCoordinates = new Vector2(40f, 20f); /* Not certain */
+        Vector3 initialCenterRotation = new Vector3(0f, -15f, 0f);
 
         /*
-            Initial center: Coordinates seem to be (40, 20)
-            Then Earth is put to the side (posX -45): rotY 0 --> -15 for initial center
-            Earth model rotation never changes: (0, -255, -41) for Europe
+            Initial center (40, 20): 0, -15, 0
+            Centered Tokyo (36.5, 139.35): -13.5, 71, -57
+
+            --> What I got: 69.4, 72.4, -45.4 --> What would be cool: x, 68 or 69, -64
+            transform.Rotate(Camera.main.transform.right, latitude + initialCenterCoordinates.x, Space.World);
+            transform.Rotate(Vector3.up, longitude - initialCenterCoordinates.y, Space.World);
+        */
+
+        transform.Rotate(Camera.main.transform.right, latitude + initialCenterCoordinates.x, Space.World);
+        transform.Rotate(Vector3.up, longitude - initialCenterCoordinates.y, Space.World);
+
+        /*
+            - Initial Earth rotation is Vector3.zero, but it may have changed since then.
+            - At Vector3.zero, the initial center coordinates are (40, 20).
         */
     }
 }
