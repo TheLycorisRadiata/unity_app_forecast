@@ -29,6 +29,8 @@ public class Geocoding : MonoBehaviour
 
         - TODO: Bouton pour valider --> Une loupe.
         - TODO: Bouton pour afficher/cacher la liste --> Un oeil / Un oeil barré.
+        - TODO: Display text to say that no location has been found.
+        - TODO: Make it possible to find Null Island from text.
     */
 
     /*

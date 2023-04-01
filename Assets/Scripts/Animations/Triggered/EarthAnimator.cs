@@ -55,15 +55,29 @@ public class EarthAnimator : MonoBehaviour
 
     public void RotateEarthToCenterLocation(float latitude, float longitude)
     {
-        Vector2 currCenterCoord = polarCoordinates.CalculateCoordinatesAtCenter();
-        float currCenterLat = currCenterCoord.y;
-        float currCenterLon = currCenterCoord.x;
+        Vector2 currCenterCoord;
+        float currCenterLat, currCenterLon;
+        float diffLat, diffLon;
+        int counter = 0;
 
-        float diffLat = currCenterLat - latitude;
-        float diffLon = currCenterLon - longitude;
+        do
+        {
+            currCenterCoord = polarCoordinates.CalculateCoordinatesAtCenter();
+            currCenterLat = currCenterCoord.y;
+            currCenterLon = currCenterCoord.x;
 
-        Debug.Log($"The current center is ({currCenterLat},{currCenterLon})");
-        Debug.Log($"The goal is ({latitude},{longitude})");
-        Debug.Log($"The difference is ({diffLat},{diffLon})");
+            diffLat = currCenterLat - latitude;
+            diffLon = currCenterLon - longitude;
+
+            /* For some reason several passes are needed */
+            transform.Rotate(Camera.main.transform.right, diffLat, Space.World);
+            transform.Rotate(-Vector3.up, diffLon, Space.World);
+
+            /* Add a limit */
+            ++counter;
+            if (counter > 20)
+                break;
+        }
+        while (Mathf.Abs(diffLat) > 1f || Mathf.Abs(diffLon) > 1f);
     }
 }
