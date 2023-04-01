@@ -21,4 +21,9 @@ public static class StringFormat
         string normalizedText = text.Normalize(NormalizationForm.FormD);
         return nonSpacingMarkRegex.Replace(normalizedText, string.Empty);
     }
+
+    public static bool WordContainsWord(string str, string subStr)
+    {
+        return RemoveDiacritics(str.ToLower()).Contains(RemoveDiacritics(subStr.ToLower()));
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Web;
+using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -138,6 +139,7 @@ public class Geocoding : MonoBehaviour
         int i;
         string name;
         string[] arr;
+        int firstIndex;
 
         /* Fetch the Nominatim "display name" for each location */
         for (i = 0; i < locations.Count; ++i)
@@ -180,12 +182,21 @@ public class Geocoding : MonoBehaviour
                         - 6e Soufrière, Commune d'Acul-du-Nord, Arrondissement d'Acul-du-Nord, Département du Nord, Haïti
                     */
 
-                    /* Keep the last 6 elements */
                     arr = name.Split(", ");
-                    arr = Enumerable.Reverse(arr).Take(6).Reverse().ToArray();
+                    /* Remove words with a number in them */
+                    arr = arr.Where(element => !element.Any(char.IsDigit)).ToArray();
+                    /* Remove words before user input */
+                    firstIndex = arr.ToList().FindIndex(element => StringFormat.WordContainsWord(element, userInput.text));
+                    arr = Enumerable.Reverse(arr).Take(arr.Length - firstIndex).Reverse().ToArray();
+                    /* Remove words with a non-latin character in them */
+                    arr = arr.Where(element => Regex.IsMatch(element, "[a-z]", RegexOptions.IgnoreCase)).ToArray();
+
                     name = string.Join(", ", arr);
                     /* Check if the input is still in the name, now that it has been reduced */
-                    if (!StringFormat.RemoveDiacritics(name).Contains(StringFormat.RemoveDiacritics(userInput.text), StringComparison.OrdinalIgnoreCase))
+                    if (!StringFormat.WordContainsWord(name, userInput.text))
+                        continue;
+                    /* Check if the element doesn't already exist in the list */
+                    else if (locations.Any(element => element.displayName == name))
                         continue;
 
                     /* displayName is null by default, this will give it a value */
