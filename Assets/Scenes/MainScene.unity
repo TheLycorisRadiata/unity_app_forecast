@@ -1839,6 +1839,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
   locationScript: {fileID: 1441736969}
+  polarCoordinates: {fileID: 609774751}
   earthAnimator: {fileID: 609774750}
   userInput: {fileID: 119056603}
   listCount: {fileID: 321769259}
@@ -3434,7 +3435,7 @@ GameObject:
   - component: {fileID: 543450653683642245}
   - component: {fileID: 3469287837533954080}
   - component: {fileID: 1711813855620601066}
-  - component: {fileID: 3469287837533954082}
+  - component: {fileID: 3469287837533954083}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -3492,8 +3493,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149212525887}
   m_Mesh: {fileID: 4711208715938537054, guid: c49ad153c7632172f9e7cb52c46d1881, type: 3}
---- !u!64 &3469287837533954082
-MeshCollider:
+--- !u!135 &3469287837533954083
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3502,7 +3503,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4711208715938537054, guid: c49ad153c7632172f9e7cb52c46d1881, type: 3}
+  serializedVersion: 2
+  m_Radius: 9.830845
+  m_Center: {x: 0, y: 0, z: 0}

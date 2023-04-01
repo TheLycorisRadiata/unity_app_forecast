@@ -23,4 +23,16 @@ public class PolarCoordinates : MonoBehaviour
 
         return new Vector2(coordinates.x, coordinates.y);
     }
+
+    public Vector2 CalculateCoordinatesAtCenter()
+    {
+        Vector3 earthScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Ray ray = Camera.main.ScreenPointToRay(earthScreenPos);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+            return CalculateCoordinates(hit.point);
+        else
+            return new Vector2(float.NaN, float.NaN);
+    }
 }

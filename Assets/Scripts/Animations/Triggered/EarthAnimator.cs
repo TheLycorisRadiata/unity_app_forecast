@@ -3,14 +3,16 @@ using UnityEngine;
 
 public class EarthAnimator : MonoBehaviour
 {
+    private PolarCoordinates polarCoordinates;
     private float distance = 45f;
     private Vector3 fixRotation;
     private float duration = 2f;
     private bool earthMoved = false;
     private Vector3 earthInitialPosition, earthOpenPosition;
 
-    public void Start()
+    void Start()
     {
+        polarCoordinates = GetComponent<PolarCoordinates>();
         fixRotation = new Vector3(0f, distance / 3, 0f);
         earthInitialPosition = transform.position;
         earthOpenPosition = earthInitialPosition + Vector3.left * distance;
@@ -53,24 +55,15 @@ public class EarthAnimator : MonoBehaviour
 
     public void RotateEarthToCenterLocation(float latitude, float longitude)
     {
-        Vector2 initialCenterCoordinates = new Vector2(40f, 20f); /* Not certain */
-        Vector3 initialCenterRotation = new Vector3(0f, -15f, 0f);
+        Vector2 currCenterCoord = polarCoordinates.CalculateCoordinatesAtCenter();
+        float currCenterLat = currCenterCoord.y;
+        float currCenterLon = currCenterCoord.x;
 
-        /*
-            Initial center (40, 20): 0, -15, 0
-            Centered Tokyo (36.5, 139.35): -13.5, 71, -57
+        float diffLat = currCenterLat - latitude;
+        float diffLon = currCenterLon - longitude;
 
-            --> What I got: 69.4, 72.4, -45.4 --> What would be cool: x, 68 or 69, -64
-            transform.Rotate(Camera.main.transform.right, latitude + initialCenterCoordinates.x, Space.World);
-            transform.Rotate(Vector3.up, longitude - initialCenterCoordinates.y, Space.World);
-        */
-
-        transform.Rotate(Camera.main.transform.right, latitude + initialCenterCoordinates.x, Space.World);
-        transform.Rotate(Vector3.up, longitude - initialCenterCoordinates.y, Space.World);
-
-        /*
-            - Initial Earth rotation is Vector3.zero, but it may have changed since then.
-            - At Vector3.zero, the initial center coordinates are (40, 20).
-        */
+        Debug.Log($"The current center is ({currCenterLat},{currCenterLon})");
+        Debug.Log($"The goal is ({latitude},{longitude})");
+        Debug.Log($"The difference is ({diffLat},{diffLon})");
     }
 }
