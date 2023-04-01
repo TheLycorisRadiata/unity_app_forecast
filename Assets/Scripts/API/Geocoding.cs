@@ -83,16 +83,19 @@ public class Geocoding : MonoBehaviour
 
     private void SelectLocation(int index)
     {
-        Transform element = locationListContent.GetChild(index);
+        StyleLocationElements(locationListContent.GetChild(index));
+        locationScript.UpdateLocation(locationList[index]);
+    }
+
+    private void StyleLocationElements(Transform selectedElement)
+    {
         Color yellow = new Color(224f / 255f, 182f / 255f, 37f / 255f);
         Color blue = new Color(40f / 255f, 190f / 255f, 169f / 255f);
         int i;
 
-        locationScript.UpdateLocation(locationList[index]);
-
         for (i = 0; i < locationListContent.childCount; ++i)
             locationListContent.GetChild(i).GetComponent<Image>().color = blue;
-        element.GetComponent<Image>().color = yellow;
+        selectedElement.GetComponent<Image>().color = yellow;
     }
 
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
