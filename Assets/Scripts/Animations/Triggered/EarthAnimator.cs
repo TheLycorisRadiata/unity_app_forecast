@@ -62,6 +62,11 @@ public class EarthAnimator : MonoBehaviour
 
         do
         {
+            /* For some reason several passes are needed. Add a limit. */
+            ++counter;
+            if (counter > 10)
+                break;
+
             currCenterCoord = polarCoordinates.CalculateCoordinatesAtCenter();
             currCenterLat = currCenterCoord.y;
             currCenterLon = currCenterCoord.x;
@@ -69,15 +74,9 @@ public class EarthAnimator : MonoBehaviour
             diffLat = currCenterLat - latitude;
             diffLon = currCenterLon - longitude;
 
-            /* For some reason several passes are needed */
             transform.Rotate(Camera.main.transform.right, diffLat, Space.World);
             transform.Rotate(-Vector3.up, diffLon, Space.World);
-
-            /* Add a limit */
-            ++counter;
-            if (counter > 20)
-                break;
         }
-        while (Mathf.Abs(diffLat) > 1f || Mathf.Abs(diffLon) > 1f);
+        while (Mathf.Abs(diffLat) > 2f || Mathf.Abs(diffLon) > 2f);
     }
 }
