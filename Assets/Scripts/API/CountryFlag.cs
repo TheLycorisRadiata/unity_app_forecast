@@ -9,7 +9,10 @@ public class CountryFlag : MonoBehaviour
 
     public void UpdateFlag(string countryCode)
     {
-        StartCoroutine(LoadFlag(countryCode.ToLower()));
+        if (countryCode == null)
+            ResetFlag();
+        else
+            StartCoroutine(LoadFlag(countryCode.ToLower()));
     }
 
     IEnumerator LoadFlag(string countryCode)

@@ -27,7 +27,7 @@ public class Geocoding : MonoBehaviour
 
     /*
         TODO:
-        - TODO: Make it possible to find Null Island from text.
+        - TODO: Validate with "Enter" key.
         - TODO: Button to validate --> A magnifying glass.
         - TODO: Button to display/hide the list --> An eye / A slashed eye.
         - TODO: The operation can take some time, so implement a loading spinner.
@@ -53,7 +53,7 @@ public class Geocoding : MonoBehaviour
         {
             if (locations == null)
             {
-                listCount.text = "0 lieu";
+                PopulateMenu(locations);
                 return;
             }
 
@@ -197,6 +197,11 @@ public class Geocoding : MonoBehaviour
     {
         int i;
         locationList = locations;
+
+        /* Make it possible to find Null Island */
+        if (locationList.Count == 0 && StringFormat.WordComparison(userInput.text, "Null Island") || StringFormat.WordComparison(userInput.text, "Null"))
+            locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
+
         listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
         for (i = 0; i < locationList.Count; ++i)
         {
