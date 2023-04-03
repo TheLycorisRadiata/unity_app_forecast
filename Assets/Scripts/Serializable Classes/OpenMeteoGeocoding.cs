@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 [Serializable]
@@ -42,5 +43,30 @@ public class OmgLocation
         this.longitude = longitude;
         this.countryCode = countryCode;
         this.displayName = displayName;
+    }
+}
+
+public class OmgLocationComparer : IComparer<OmgLocation>
+{
+    public int Compare(OmgLocation x, OmgLocation y)
+    {
+        string[] xParts = x.displayName.Split(", ").Reverse().ToArray();
+        string[] yParts = y.displayName.Split(", ").Reverse().ToArray();
+        int i, result;
+
+        /* Compare the number of parts */
+        result = xParts.Length.CompareTo(yParts.Length);
+        if (result != 0)
+            return result;
+
+        /* If the number of parts is the same, compare individual parts */
+        for (i = 0; i < xParts.Length; ++i)
+        {
+            result = string.Compare(xParts[i], yParts[i]);
+            if (result != 0)
+                return result;
+        }
+
+        return 0;
     }
 }

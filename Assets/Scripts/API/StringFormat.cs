@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,5 +26,10 @@ public static class StringFormat
     public static bool WordContainsWord(string str, string subStr)
     {
         return RemoveDiacritics(str.ToLower()).Contains(RemoveDiacritics(subStr.ToLower()));
+    }
+
+    public static bool WordComparison(string str1, string str2)
+    {
+        return string.Equals(RemoveDiacritics(str1), RemoveDiacritics(str2), StringComparison.OrdinalIgnoreCase);
     }
 }

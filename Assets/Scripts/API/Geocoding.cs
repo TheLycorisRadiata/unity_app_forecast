@@ -27,10 +27,10 @@ public class Geocoding : MonoBehaviour
 
     /*
         TODO:
-        - TODO: Bouton pour valider --> Une loupe.
-        - TODO: Bouton pour afficher/cacher la liste --> Un oeil / Un oeil barré.
-        - TODO: Display text to say that no location has been found.
         - TODO: Make it possible to find Null Island from text.
+        - TODO: Button to validate --> A magnifying glass.
+        - TODO: Button to display/hide the list --> An eye / A slashed eye.
+        - TODO: The operation can take some time, so implement a loading spinner.
     */
 
     /*
@@ -49,12 +49,13 @@ public class Geocoding : MonoBehaviour
 
         EmptyList();
 
-        // TODO: The operation can take some time, so implement a loading spinner
-
         StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
         {
             if (locations == null)
+            {
+                listCount.text = "0 lieu";
                 return;
+            }
 
             StartCoroutine(FetchNominatimDisplayNames(locations, (locations) => PopulateMenu(locations)));
         }));
@@ -128,11 +129,8 @@ public class Geocoding : MonoBehaviour
 
                 name = nominatim.displayName;
 
-                /*
-                    OpenMeteo may send locations which do not match with the user input, therefore check if displayName contains the input.
-                    RemoveDiacritics() is to remove accents (only for the check).
-                */
-                if (StringFormat.RemoveDiacritics(name).Contains(StringFormat.RemoveDiacritics(userInput.text), StringComparison.OrdinalIgnoreCase))
+                /* OpenMeteo may send locations which do not match with the user input, therefore check if displayName contains the input */
+                if (StringFormat.WordContainsWord(name, userInput.text))
                 {
                     /*
                         - [...], Paris, Île-de-France, France métropolitaine, 75004, France
@@ -142,15 +140,20 @@ public class Geocoding : MonoBehaviour
                     */
 
                     arr = name.Split(", ");
+
+                    /* Remove words before user input */
+                    firstIndex = arr.ToList().FindIndex(element => StringFormat.WordComparison(element, userInput.text));
+                    if (firstIndex < 0)
+                        continue;
+                    arr = Enumerable.Reverse(arr).Take(arr.Length - firstIndex).Reverse().ToArray();
+
                     /* Remove words with a number in them */
                     arr = arr.Where(element => !element.Any(char.IsDigit)).ToArray();
-                    /* Remove words before user input */
-                    firstIndex = arr.ToList().FindIndex(element => StringFormat.WordContainsWord(element, userInput.text));
-                    arr = Enumerable.Reverse(arr).Take(arr.Length - firstIndex).Reverse().ToArray();
                     /* Remove words with a non-latin character in them */
                     arr = arr.Where(element => Regex.IsMatch(element, "[a-z]", RegexOptions.IgnoreCase)).ToArray();
 
                     name = string.Join(", ", arr);
+
                     /* Check if the input is still in the name, now that it has been reduced */
                     if (!StringFormat.WordContainsWord(name, userInput.text))
                         continue;
@@ -173,6 +176,10 @@ public class Geocoding : MonoBehaviour
 
         /* Remove incorrect locations */
         locations.RemoveAll(element => element?.displayName == null);
+
+        /* Sort in alphabetical order based on the country name, then the region, etc. */
+        if (locations.Count > 1)
+            locations = locations.OrderBy(e => e, new OmgLocationComparer()).ToList();
 
         callback(locations);
     }
