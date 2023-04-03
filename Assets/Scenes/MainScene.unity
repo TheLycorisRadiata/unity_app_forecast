@@ -1022,6 +1022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c743fba5ee645ef4d9fe3bd2c3e9c2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  earth: {fileID: 609774748}
   hasHit: 0
   point: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
@@ -1837,9 +1838,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b2f388ab1180b419979305e2a1345c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycast: {fileID: 330585548}
+  polarCoord: {fileID: 609774751}
+  earth: {fileID: 609774748}
+  pinManager: {fileID: 1441736967}
   location: {fileID: 11400000, guid: 7e7c589438c12334fb395501686cb741, type: 2}
   locationScript: {fileID: 1441736969}
-  earthAnimator: {fileID: 609774750}
   userInput: {fileID: 119056603}
   listCount: {fileID: 321769259}
   locationListContent: {fileID: 1410865544}

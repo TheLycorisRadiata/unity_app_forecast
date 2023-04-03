@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class EarthAnimator : MonoBehaviour
 {
-    private PolarCoordinates polarCoordinates;
     private float distance = 45f;
     private Vector3 fixRotation;
     private float duration = 2f;
@@ -12,7 +11,6 @@ public class EarthAnimator : MonoBehaviour
 
     void Start()
     {
-        polarCoordinates = GetComponent<PolarCoordinates>();
         fixRotation = new Vector3(0f, distance / 3, 0f);
         earthInitialPosition = transform.position;
         earthOpenPosition = earthInitialPosition + Vector3.left * distance;
@@ -51,32 +49,5 @@ public class EarthAnimator : MonoBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-    }
-
-    public void RotateEarthToCenterLocation(float latitude, float longitude)
-    {
-        Vector2 currCenterCoord;
-        float currCenterLat, currCenterLon;
-        float diffLat, diffLon;
-        int counter = 0;
-
-        do
-        {
-            /* For some reason several passes are needed. Add a limit. */
-            ++counter;
-            if (counter > 10)
-                break;
-
-            currCenterCoord = polarCoordinates.CalculateCoordinatesAtCenter();
-            currCenterLat = currCenterCoord.y;
-            currCenterLon = currCenterCoord.x;
-
-            diffLat = currCenterLat - latitude;
-            diffLon = currCenterLon - longitude;
-
-            transform.Rotate(Camera.main.transform.right, diffLat, Space.World);
-            transform.Rotate(-Vector3.up, diffLon, Space.World);
-        }
-        while (Mathf.Abs(diffLat) > 2f || Mathf.Abs(diffLon) > 2f);
     }
 }

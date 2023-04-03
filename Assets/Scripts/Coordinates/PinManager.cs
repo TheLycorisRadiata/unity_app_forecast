@@ -4,60 +4,47 @@ using UnityEngine.Events;
 public class PinManager : MonoBehaviour
 {
     [SerializeField] private Raycast raycast;
+
+    private GameObject pin;
     [SerializeField] private GameObject pinPrefab;
+    private bool isPinned = false;
+
     [SerializeField] private Transform earthModel;
     [SerializeField] private LocationScriptableObjectScript locationScript;
     [SerializeField] private UnityEvent OpenMenu;
-
-    private GameObject pin;
-    private bool isPinned;
-    private Vector3 pinPosition;
-    private Quaternion pinRotation;
-
-    void Start()
-    {
-        isPinned = false;
-    }
 
     void Update()
     {
         if (UserInput.click && raycast.hasHit && !MenuPointer.isPointerOnMenu)
         {
-            PinWithRaycast();
+            if (!isPinned)
+            {
+                CreatePin(raycast.point, raycast.rotation);
+                locationScript.UpdateLocation(raycast.point);
+                OpenMenu.Invoke();
+            }
+            else
+            {
+                MovePin(raycast.point, raycast.rotation);
+                locationScript.UpdateLocation(raycast.point);
+            }
+
             UserInput.click = false;
         }
     }
 
-    public void PinWithRaycast()
+    public void CreatePin(Vector3 raycastPoint, Quaternion raycastRotation)
     {
-        pinPosition = raycast.point;
-        pinRotation = raycast.rotation;
-
-        if (isPinned == false)
-        {
-            CreatePin();
-            locationScript.UpdateLocation(pinPosition);
-            OpenMenu.Invoke();
-        }
-        else
-        {
-            MovePin();
-            locationScript.UpdateLocation(pinPosition);
-        }
-    }
-
-    private void CreatePin()
-    {
-        pin = Instantiate(pinPrefab, pinPosition, pinRotation, earthModel);
+        pin = Instantiate(pinPrefab, raycastPoint, raycastRotation, earthModel);
         pin.SetActive(true);
         isPinned = true;
     }
 
-    private void MovePin()
+    public void MovePin(Vector3 raycastPoint, Quaternion raycastRotation)
     {
         pin.SetActive(false);
-        pin.transform.position = pinPosition;
-        pin.transform.rotation = pinRotation;
+        pin.transform.position = raycastPoint;
+        pin.transform.rotation = raycastRotation;
         pin.SetActive(true);
     }
 }
