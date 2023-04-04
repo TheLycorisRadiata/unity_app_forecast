@@ -41,9 +41,13 @@ public class Geocoding : MonoBehaviour
         https://api.open-meteo.com/v1/forecast?latitude=43.72&longitude=7.30&hourly=temperature_2m
     */
 
-    /* OnClick event in the menu */
+    /* OnClick event in the validate button */
     public void FetchLocationList()
     {
+        /* Remove leading and trailing spaces, as well as multiple spaces (only single ones allowed) */
+        userInput.text = userInput.text.Trim();
+        userInput.text = Regex.Replace(userInput.text, @"\s+", " ");
+
         if (userInput.text == "")
             return;
 
