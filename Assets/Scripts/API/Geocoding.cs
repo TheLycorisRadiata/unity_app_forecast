@@ -202,19 +202,16 @@ public class Geocoding : MonoBehaviour
                     /* Check if the input is still in the name, now that it has been reduced */
                     if (!StringFormat.WordContainsWord(name, userInput.text))
                         continue;
-                    /* Check if the element doesn't already exist in the list */
+                    /*
+                        Check if the element doesn't already exist in the list 
+                        (Note: the first iteration is kept because it's likely to be the most accurate one for this location, 
+                        as the API tries to order the elements according to their relevancy)
+                    */
                     else if (locations.Any(element => element.displayName == name))
                         continue;
 
                     /* displayName is null by default, this will give it a value */
                     locations[i].displayName = name;
-
-                    /*
-                        Since we're already in a loop, seize the opportunity to perform this operation:
-                        Limit the coordinates up to 2 decimals after the floating point.
-                    */
-                    locations[i].latitude = (float)Math.Round(locations[i].latitude, 2);
-                    locations[i].longitude = (float)Math.Round(locations[i].longitude, 2);
                 }
             }
         }
@@ -222,9 +219,18 @@ public class Geocoding : MonoBehaviour
         /* Remove incorrect locations */
         locations.RemoveAll(element => element?.displayName == null);
 
-        /* Sort in alphabetical order based on the country name, then the region, etc. */
         if (locations.Count > 1)
+        {
+            /* The first element remains the first, because it's likely to be what the user is searching for. */
+            OmgLocation first = locations[0];
+            locations.RemoveAt(0);
+
+            /* The rest is sorted in alphabetical order based on the country name, then the region, etc. */
             locations = locations.OrderBy(e => e, new OmgLocationComparer()).ToList();
+
+            /* Add back the first element */
+            locations.Insert(0, first);
+        }
 
         callback(locations);
     }

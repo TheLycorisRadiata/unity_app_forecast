@@ -45,7 +45,6 @@ public class LocationScriptableObjectScript : MonoBehaviour
     private void UpdateLocationCoordinates(Vector3 raycastPoint)
     {
         Vector2 coord = polarCoordinates.CalculateCoordinates(raycastPoint);
-        coord = polarCoordinates.RoundUpPolarCoordinates(coord, 2);
         location.latitude = coord.y;
         location.longitude = coord.x;
         coordinatesText.CoordinatesTextUpdate(location.latitude, location.longitude);

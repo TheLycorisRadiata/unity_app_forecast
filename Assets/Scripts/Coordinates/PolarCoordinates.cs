@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PolarCoordinates : MonoBehaviour
@@ -43,12 +42,5 @@ public class PolarCoordinates : MonoBehaviour
         float longitude = sphericalCoordinates.z;
         float latitude = 90f - sphericalCoordinates.y;
         return new Vector2(longitude, latitude);
-    }
-
-    public Vector2 RoundUpPolarCoordinates(Vector2 coordinates, int digits)
-    {
-        coordinates.y = (float)Math.Round(coordinates.y, digits);
-        coordinates.x = (float)Math.Round(coordinates.x, digits);
-        return coordinates;
     }
 }

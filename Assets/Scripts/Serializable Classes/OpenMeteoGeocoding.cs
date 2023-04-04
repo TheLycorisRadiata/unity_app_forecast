@@ -54,13 +54,7 @@ public class OmgLocationComparer : IComparer<OmgLocation>
         string[] yParts = y.displayName.Split(", ").Reverse().ToArray();
         int i, result;
 
-        /* Compare the number of parts */
-        result = xParts.Length.CompareTo(yParts.Length);
-        if (result != 0)
-            return result;
-
-        /* If the number of parts is the same, compare individual parts */
-        for (i = 0; i < xParts.Length; ++i)
+        for (i = 0; i < Math.Min(xParts.Length, yParts.Length); ++i)
         {
             result = string.Compare(xParts[i], yParts[i]);
             if (result != 0)

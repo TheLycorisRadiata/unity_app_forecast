@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 
@@ -8,7 +9,7 @@ public class CoordinatesText : MonoBehaviour
     
     public void CoordinatesTextUpdate(float fLatitude, float fLongitude)
     {
-        latitude.text = "Latitude: " + fLatitude;
-        longitude.text = "Longitude: " + fLongitude;
+        latitude.text = "Latitude: " + (float)Math.Round(fLatitude, 2);
+        longitude.text = "Longitude: " + (float)Math.Round(fLongitude, 2);
     }
 }
