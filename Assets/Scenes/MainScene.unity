@@ -371,7 +371,7 @@ MonoBehaviour:
   m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
-  m_LineType: 0
+  m_LineType: 2
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 0
-  m_LineLimit: 0
+  m_LineLimit: 1
   m_InputValidator: {fileID: 0}
 --- !u!114 &119056604
 MonoBehaviour:
@@ -1760,7 +1760,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1849,6 +1849,7 @@ MonoBehaviour:
   locationListContent: {fileID: 1410865544}
   locationListPrefab: {fileID: 2556512962515625281, guid: 564cb98b86dd80c469a5617b3df65a7f,
     type: 3}
+  displayList: {fileID: 1929871152}
 --- !u!1 &1351076884
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,11 +9,8 @@ public class DisplayLocationList : MonoBehaviour
 
     public void DisplayList()
     {
-        if (userInput.text != "")
-        {
-            isDisplayed = true;
-            list.SetActive(isDisplayed);
-        }
+        isDisplayed = true;
+        list.SetActive(isDisplayed);
     }
 
     public void ToggleDisplay()

@@ -23,6 +23,15 @@ public static class StringFormat
         return nonSpacingMarkRegex.Replace(normalizedText, string.Empty);
     }
 
+    public static string RemoveExtraSpaces(string str)
+    {
+        /* Remove leading and trailing spaces */
+        str = str.Trim();
+        /* Remove multiple spaces to leave only single ones */
+        str = Regex.Replace(str, @"\s+", " ");
+        return str;
+    }
+
     public static bool WordContainsWord(string str, string subStr)
     {
         return RemoveDiacritics(str.ToLower()).Contains(RemoveDiacritics(subStr.ToLower()));
