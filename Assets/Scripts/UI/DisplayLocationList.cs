@@ -7,15 +7,21 @@ public class DisplayLocationList : MonoBehaviour
     [SerializeField] private TMP_InputField userInput;
     private bool isDisplayed;
 
+    public void ToggleDisplay()
+    {
+        isDisplayed = !isDisplayed;
+        list.SetActive(isDisplayed);
+    }
+
     public void DisplayList()
     {
         isDisplayed = true;
         list.SetActive(isDisplayed);
     }
 
-    public void ToggleDisplay()
+    public void HideList()
     {
-        isDisplayed = !isDisplayed;
+        isDisplayed = false;
         list.SetActive(isDisplayed);
     }
 }

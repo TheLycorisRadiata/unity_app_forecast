@@ -22,6 +22,7 @@ public class Geocoding : MonoBehaviour
 
     private List<OmgLocation> locationList;
     [SerializeField] private TextMeshProUGUI listCount;
+    [SerializeField] private GameObject locationListSpinner;
     [SerializeField] private Transform locationListContent;
     [SerializeField] private GameObject locationListPrefab;
     [SerializeField] private DisplayLocationList displayList;
@@ -30,7 +31,6 @@ public class Geocoding : MonoBehaviour
         TODO:
         - TODO: Button to validate --> A magnifying glass.
         - TODO: Button to display/hide the list --> An eye / A slashed eye.
-        - TODO: The operation can take some time, so implement a loading spinner.
     */
 
     /*
@@ -49,6 +49,7 @@ public class Geocoding : MonoBehaviour
             return;
 
         EmptyList();
+        locationListSpinner.SetActive(true);
 
         StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
         {
@@ -175,7 +176,7 @@ public class Geocoding : MonoBehaviour
         /* Remove incorrect locations */
         locations.RemoveAll(element => element?.displayName == null);
 
-        if (locations.Count > 1)
+        if (locations.Count > 2)
         {
             /* The first element remains the first, because it's likely to be what the user is searching for. */
             OmgLocation first = locations[0];
@@ -209,7 +210,10 @@ public class Geocoding : MonoBehaviour
         if (locationList.Count == 0 && StringFormat.WordComparison(userInput.text, "Null Island") || StringFormat.WordComparison(userInput.text, "Null"))
             locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
 
+        locationListSpinner.SetActive(false);
+
         listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
+
         for (i = 0; i < locationList.Count; ++i)
         {
             Transform t = Instantiate(locationListPrefab, locationListContent.position, Quaternion.identity).transform;
