@@ -291,6 +291,7 @@ GameObject:
   - component: {fileID: 119056605}
   - component: {fileID: 119056604}
   - component: {fileID: 119056603}
+  - component: {fileID: 119056606}
   m_Layer: 0
   m_Name: Text Input
   m_TagString: Untagged
@@ -455,6 +456,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119056601}
   m_CullTransparentMesh: 1
+--- !u!114 &119056606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119056601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac36345a20ecb440b8271ac85ff0d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  validation:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1282133642}
+        m_TargetAssemblyTypeName: Geocoding, Assembly-CSharp
+        m_MethodName: FetchLocationList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &278103827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2051,18 +2079,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1282133642}
         m_TargetAssemblyTypeName: Geocoding, Assembly-CSharp
         m_MethodName: FetchLocationList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1929871152}
-        m_TargetAssemblyTypeName: DisplayLocationList, Assembly-CSharp
-        m_MethodName: DisplayList
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
