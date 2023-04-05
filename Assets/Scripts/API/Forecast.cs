@@ -1,11 +1,53 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Forecast : MonoBehaviour
 {
-    // https://api.open-meteo.com/v1/forecast?latitude=43.72&longitude=7.30&forecast_days=5&hourly=temperature_2m,precipitation_probability
-    // 5 days or 120 hours
-    // Time is in GMT+0 and in iso8601 format
-    // Temperature is celcius and prob in %
+    [SerializeField] private LocationScriptableObject location;
+
+    public bool isClicked = false;
+    void Update()
+    {
+        int i;
+        if (isClicked)
+        {
+            isClicked = false;
+            StartCoroutine(FetchOpenMeteoForecastData((data) =>
+            {
+                for (i = 0; i < data.time.Count; ++i)
+                    Debug.Log($"Day {data.time[i].Day} at {data.time[i].Hour}H - {data.temperature[i]}°C and precipitation probability of {data.precipitationProbability[i]}%");
+            }));
+        }
+    }
+
+    private IEnumerator FetchOpenMeteoForecastData(Action<OmfHourly> callback)
+    {
+        string uri = $"https://api.open-meteo.com/v1/forecast?latitude={location.latitude}&longitude={location.longitude}&forecast_days=5&hourly=temperature_2m,precipitation_probability";
+        string jsonText;
+        OpenMeteoForecast forecast;
+
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogWarning($"Forecast error: The request failed to fetch from the API.");
+                yield break;
+            }
+
+            jsonText = webRequest.downloadHandler.text;
+            forecast = new OpenMeteoForecast(jsonText);
+
+            if (forecast.error == true)
+            {
+                Debug.LogWarning($"Forecast error: The request went through but the API couldn't find any data at these coordinates ({location.latitude},{location.longitude}).");
+                yield break;
+            }
+
+            callback(forecast.hourly);
+        }
+    }
 }
