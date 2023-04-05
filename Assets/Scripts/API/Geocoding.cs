@@ -27,20 +27,6 @@ public class Geocoding : MonoBehaviour
     [SerializeField] private GameObject locationListPrefab;
     [SerializeField] private DisplayLocationList displayList;
 
-    /*
-        TODO:
-        - TODO: Button to validate --> A magnifying glass.
-        - TODO: Button to display/hide the list --> An eye / A slashed eye.
-    */
-
-    /*
-        METEO
-        https://github.com/PolyMarsDev/Real-World-Weather/
-        https://open-meteo.com/
-        https://open-meteo.com/en/docs#latitude=43.72&longitude=7.30&hourly=temperature_2m
-        https://api.open-meteo.com/v1/forecast?latitude=43.72&longitude=7.30&hourly=temperature_2m
-    */
-
     /* OnClick event in the validate button OR from the TextInput script */
     public void FetchLocationList()
     {
