@@ -15,6 +15,7 @@ public class Geocoding : MonoBehaviour
     [SerializeField] private PolarCoordinates polarCoord;
     [SerializeField] private Transform earth;
     [SerializeField] private PinManager pinManager;
+    [SerializeField] private Forecast forecast;
 
     [SerializeField] private LocationScriptableObject location;
     [SerializeField] private LocationScriptableObjectScript locationScript;
@@ -25,7 +26,6 @@ public class Geocoding : MonoBehaviour
     [SerializeField] private GameObject locationListSpinner;
     [SerializeField] private Transform locationListContent;
     [SerializeField] private GameObject locationListPrefab;
-    [SerializeField] private GameObject forecastContent;
 
     /* OnClick event in the validate button OR from the TextInput script */
     public void FetchLocationList()
@@ -34,6 +34,7 @@ public class Geocoding : MonoBehaviour
         if (userInput.text == "")
             return;
 
+        forecast.HideForecast();
         EmptyList();
         locationListSpinner.SetActive(true);
 
@@ -47,6 +48,18 @@ public class Geocoding : MonoBehaviour
 
             StartCoroutine(FetchNominatimDisplayNames(locations, (locations) => PopulateMenu(locations)));
         }));
+    }
+
+    public void HideGeocoding()
+    {
+        locationListSpinner.SetActive(false);
+        locationListContent.gameObject.SetActive(false);
+    }
+
+    public void DisplayGeocoding()
+    {
+        locationListSpinner.SetActive(false);
+        locationListContent.gameObject.SetActive(true);
     }
 
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
@@ -196,8 +209,6 @@ public class Geocoding : MonoBehaviour
         if (locationList.Count == 0 && StringFormat.WordComparison(userInput.text, "Null Island") || StringFormat.WordComparison(userInput.text, "Null"))
             locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
 
-        locationListSpinner.SetActive(false);
-
         listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
 
         for (i = 0; i < locationList.Count; ++i)
@@ -210,8 +221,7 @@ public class Geocoding : MonoBehaviour
             t.GetComponent<Button>().onClick.AddListener(() => SelectLocation(int.Parse(t.name)));
         }
 
-        forecastContent.SetActive(false);
-        locationListContent.gameObject.SetActive(true);
+        DisplayGeocoding();
     }
 
     private void SelectLocation(int index)

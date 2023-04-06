@@ -1,32 +1,88 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Networking;
+using TMPro;
 
 public class Forecast : MonoBehaviour
 {
     [SerializeField] private LocationScriptableObject location;
-    [SerializeField] private GameObject geocodingContent;
-    [SerializeField] private Transform forecastContent;
+    [SerializeField] private Geocoding geocoding;
+    [SerializeField] private GameObject spinner, forecastExplanation, forecastContent;
 
     /* OnClick event */
     public void GetForecast()
     {
-        int i;
+        int i, j;
+        TextMeshProUGUI dayElement;
+        CultureInfo frFrench = new CultureInfo("fr-FR");
+        DateTimeFormatInfo frenchInfo = frFrench.DateTimeFormat;
+        int nbrDay = 0, nbrYear = 0;
+        string strMonth = "";
+        float[] temperatures;
+        int[] precipitationProbabilities;
 
-        StartCoroutine(FetchOpenMeteoForecastData((data) =>
+        geocoding.HideGeocoding();
+        HideForecast();
+        spinner.SetActive(true);
+
+        StartCoroutine(FetchOpenMeteoForecastData((days) =>
         {
-            for (i = 0; i < data.time.Count; ++i)
-                Debug.Log($"Day {data.time[i].Day} at {data.time[i].Hour}H - {data.temperature[i]}°C and precipitation probability of {data.precipitationProbability[i]}%");
+            if (days == null || days.Length != 5 || days[0].time.Count != 4)
+            {
+                spinner.SetActive(false);
+                return;
+            }
 
-            geocodingContent.SetActive(false);
-            forecastContent.gameObject.SetActive(true);
+            for (i = 0; i < days.Length; ++i)
+            {
+                dayElement = forecastContent.transform.Find($"Day ({i})").GetChild(0).GetComponent<TextMeshProUGUI>();
+                nbrYear = 0;
+                temperatures = new float[4];
+                precipitationProbabilities = new int[4];
+
+                for (j = 0; j < days[i].time.Count; ++j)
+                {
+                    if (nbrYear == 0)
+                    {
+                        nbrDay = days[i].time[j].Day;
+                        strMonth = frenchInfo.MonthNames[days[i].time[j].Month - 1];
+                        nbrYear = days[i].time[j].Year;
+                    }
+
+                    temperatures[j] = days[i].temperature[j];
+                    precipitationProbabilities[j] = days[i].precipitationProbability[j];
+                }
+
+                dayElement.text = $"<u>{nbrDay} {strMonth} {nbrYear}</u>\n\n" + 
+                $"6H : {temperatures[0]}°C / {precipitationProbabilities[0]}%\n" + 
+                $"Midi : {temperatures[1]}°C / {precipitationProbabilities[1]}%\n" + 
+                $"18H : {temperatures[2]}°C / {precipitationProbabilities[2]}%\n" + 
+                $"Minuit : {temperatures[3]}°C / {precipitationProbabilities[3]}%";
+            }
+
+            spinner.SetActive(false);
+            DisplayForecast();
         }));
     }
 
-    private IEnumerator FetchOpenMeteoForecastData(Action<OmfHourly> callback)
+    public void HideForecast()
     {
-        string uri = $"https://api.open-meteo.com/v1/forecast?latitude={location.latitude}&longitude={location.longitude}&forecast_days=5&hourly=temperature_2m,precipitation_probability";
+        spinner.SetActive(false);
+        forecastExplanation.SetActive(false);
+        forecastContent.SetActive(false);
+    }
+
+    public void DisplayForecast()
+    {
+        forecastExplanation.SetActive(true);
+        forecastContent.SetActive(true);
+    }
+
+    private IEnumerator FetchOpenMeteoForecastData(Action<OmfHourly[]> callback)
+    {
+        string uri = $"https://api.open-meteo.com/v1/forecast?latitude={location.latitude}&longitude={location.longitude}&hourly=temperature_2m,precipitation_probability";
         string jsonText;
         OpenMeteoForecast forecast;
 
@@ -49,7 +105,7 @@ public class Forecast : MonoBehaviour
                 yield break;
             }
 
-            callback(forecast.hourly);
+            callback(forecast?.days);
         }
     }
 }
