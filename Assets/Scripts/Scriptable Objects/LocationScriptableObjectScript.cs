@@ -16,6 +16,7 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
     void Start()
     {
+        ResetLocationData();
         menuLocationNameDefault = menuLocationName.text;
     }
 

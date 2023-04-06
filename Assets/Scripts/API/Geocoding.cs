@@ -25,7 +25,7 @@ public class Geocoding : MonoBehaviour
     [SerializeField] private GameObject locationListSpinner;
     [SerializeField] private Transform locationListContent;
     [SerializeField] private GameObject locationListPrefab;
-    [SerializeField] private DisplayLocationList displayList;
+    [SerializeField] private GameObject forecastContent;
 
     /* OnClick event in the validate button OR from the TextInput script */
     public void FetchLocationList()
@@ -210,7 +210,8 @@ public class Geocoding : MonoBehaviour
             t.GetComponent<Button>().onClick.AddListener(() => SelectLocation(int.Parse(t.name)));
         }
 
-        displayList.DisplayList();
+        forecastContent.SetActive(false);
+        locationListContent.gameObject.SetActive(true);
     }
 
     private void SelectLocation(int index)

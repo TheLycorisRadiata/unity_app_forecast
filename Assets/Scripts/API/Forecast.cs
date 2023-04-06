@@ -6,20 +6,22 @@ using UnityEngine.Networking;
 public class Forecast : MonoBehaviour
 {
     [SerializeField] private LocationScriptableObject location;
+    [SerializeField] private GameObject geocodingContent;
+    [SerializeField] private Transform forecastContent;
 
-    public bool isClicked = false;
-    void Update()
+    /* OnClick event */
+    public void GetForecast()
     {
         int i;
-        if (isClicked)
+
+        StartCoroutine(FetchOpenMeteoForecastData((data) =>
         {
-            isClicked = false;
-            StartCoroutine(FetchOpenMeteoForecastData((data) =>
-            {
-                for (i = 0; i < data.time.Count; ++i)
-                    Debug.Log($"Day {data.time[i].Day} at {data.time[i].Hour}H - {data.temperature[i]}°C and precipitation probability of {data.precipitationProbability[i]}%");
-            }));
-        }
+            for (i = 0; i < data.time.Count; ++i)
+                Debug.Log($"Day {data.time[i].Day} at {data.time[i].Hour}H - {data.temperature[i]}°C and precipitation probability of {data.precipitationProbability[i]}%");
+
+            geocodingContent.SetActive(false);
+            forecastContent.gameObject.SetActive(true);
+        }));
     }
 
     private IEnumerator FetchOpenMeteoForecastData(Action<OmfHourly> callback)
