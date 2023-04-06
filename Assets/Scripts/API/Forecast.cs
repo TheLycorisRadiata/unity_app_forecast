@@ -10,18 +10,41 @@ public class Forecast : MonoBehaviour
     [SerializeField] private LocationScriptableObject location;
     [SerializeField] private Geocoding geocoding;
     [SerializeField] private GameObject spinner, forecastExplanation, forecastContent;
+    private CultureInfo frFrench;
+    private DateTimeFormatInfo frenchInfo;
+    private float previousLatitude, previousLongitude;
+
+    void Start()
+    {
+        frFrench = new CultureInfo("fr-FR");
+        frenchInfo = frFrench.DateTimeFormat;
+        previousLatitude = location.latitude;
+        previousLongitude = location.longitude;
+    }
 
     /* OnClick event */
     public void GetForecast()
     {
         int i, j;
         TextMeshProUGUI dayElement;
-        CultureInfo frFrench = new CultureInfo("fr-FR");
-        DateTimeFormatInfo frenchInfo = frFrench.DateTimeFormat;
         int nbrDay = 0, nbrYear = 0;
         string strMonth = "";
         float[] temperatures;
         int[] precipitationProbabilities;
+
+        /* If coordinates are unchanged, don't fetch from API */
+        if ((int)(Math.Round(location.latitude, 2) * 100) == (int)(Math.Round(previousLatitude, 2) * 100) 
+            && (int)(Math.Round(location.longitude, 2) * 100) == (int)(Math.Round(previousLongitude, 2) * 100))
+        {
+            geocoding.HideGeocoding();
+            DisplayForecast();
+            return;
+        }
+        else
+        {
+            previousLatitude = location.latitude;
+            previousLongitude = location.longitude;
+        }
 
         geocoding.HideGeocoding();
         HideForecast();

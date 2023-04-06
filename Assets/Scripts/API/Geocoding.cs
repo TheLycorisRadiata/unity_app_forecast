@@ -20,6 +20,7 @@ public class Geocoding : MonoBehaviour
     [SerializeField] private LocationScriptableObject location;
     [SerializeField] private LocationScriptableObjectScript locationScript;
     [SerializeField] private TMP_InputField userInput;
+    private string previousUserInput = "";
 
     private List<OmgLocation> locationList;
     [SerializeField] private TextMeshProUGUI listCount;
@@ -30,9 +31,17 @@ public class Geocoding : MonoBehaviour
     /* OnClick event in the validate button OR from the TextInput script */
     public void FetchLocationList()
     {
-        userInput.text = StringFormat.RemoveExtraSpaces(userInput.text);
+        userInput.text = StringFormat.RemoveExtraSpaces(userInput.text.ToLower());
         if (userInput.text == "")
             return;
+        else if (userInput.text == previousUserInput)
+        {
+            forecast.HideForecast();
+            DisplayGeocoding();
+            return;
+        }
+        if (previousUserInput == "")
+            previousUserInput = userInput.text;
 
         forecast.HideForecast();
         EmptyList();
