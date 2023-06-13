@@ -11,41 +11,41 @@ using TMPro;
 
 public class Geocoding : MonoBehaviour
 {
-    [SerializeField] private Raycast raycast;
-    [SerializeField] private PolarCoordinates polarCoord;
-    [SerializeField] private Transform earth;
-    [SerializeField] private PinManager pinManager;
-    [SerializeField] private Forecast forecast;
+    [SerializeField] private Raycast _raycast;
+    [SerializeField] private PolarCoordinates _polarCoord;
+    [SerializeField] private Transform _earth;
+    [SerializeField] private PinManager _pinManager;
+    [SerializeField] private Forecast _forecast;
 
-    [SerializeField] private LocationScriptableObject location;
-    [SerializeField] private LocationScriptableObjectScript locationScript;
-    [SerializeField] private TMP_InputField userInput;
-    private string previousUserInput = "";
+    [SerializeField] private LocationScriptableObject _location;
+    [SerializeField] private LocationScriptableObjectScript _locationScript;
+    [SerializeField] private TMP_InputField _userInput;
+    private string _previousUserInput = "";
 
-    private List<OmgLocation> locationList;
-    [SerializeField] private TextMeshProUGUI listCount;
-    [SerializeField] private GameObject locationListSpinner;
-    [SerializeField] private Transform locationListContent;
-    [SerializeField] private GameObject locationListPrefab;
+    private List<OmgLocation> _locationList;
+    [SerializeField] private TextMeshProUGUI _listCount;
+    [SerializeField] private GameObject _locationListSpinner;
+    [SerializeField] private Transform _locationListContent;
+    [SerializeField] private GameObject _locationListPrefab;
 
     /* OnClick event in the validate button OR from the TextInput script */
     public void FetchLocationList()
     {
-        userInput.text = StringFormat.RemoveExtraSpaces(userInput.text.ToLower());
-        if (userInput.text == "")
+        _userInput.text = StringFormat.RemoveExtraSpaces(_userInput.text.ToLower());
+        if (_userInput.text == "")
             return;
-        else if (userInput.text == previousUserInput)
+        else if (_userInput.text == _previousUserInput)
         {
-            forecast.HideForecast();
+            _forecast.HideForecast();
             DisplayGeocoding();
             return;
         }
-        if (previousUserInput == "")
-            previousUserInput = userInput.text;
+        if (_previousUserInput == "")
+            _previousUserInput = _userInput.text;
 
-        forecast.HideForecast();
+        _forecast.HideForecast();
         EmptyList();
-        locationListSpinner.SetActive(true);
+        _locationListSpinner.SetActive(true);
 
         StartCoroutine(FetchOpenMeteoGeocodingData((locations) =>
         {
@@ -61,19 +61,19 @@ public class Geocoding : MonoBehaviour
 
     public void HideGeocoding()
     {
-        locationListSpinner.SetActive(false);
-        locationListContent.gameObject.SetActive(false);
+        _locationListSpinner.SetActive(false);
+        _locationListContent.gameObject.SetActive(false);
     }
 
     public void DisplayGeocoding()
     {
-        locationListSpinner.SetActive(false);
-        locationListContent.gameObject.SetActive(true);
+        _locationListSpinner.SetActive(false);
+        _locationListContent.gameObject.SetActive(true);
     }
 
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
     {
-        string encodedInput = HttpUtility.UrlEncode(userInput.text);
+        string encodedInput = HttpUtility.UrlEncode(_userInput.text);
         string uri = $"https://geocoding-api.open-meteo.com/v1/search?name={encodedInput}&language=fr";
         string jsonText;
         OpenMeteoGeocoding geocoding;
@@ -93,7 +93,7 @@ public class Geocoding : MonoBehaviour
 
             if (geocoding.results == null)
             {
-                Debug.LogWarning($"Geocoding error: The request went through but the API couldn't find any location of this name ({userInput}).");
+                Debug.LogWarning($"Geocoding error: The request went through but the API couldn't find any location of this name ({_userInput}).");
                 yield break;
             }
 
@@ -140,7 +140,7 @@ public class Geocoding : MonoBehaviour
                 name = nominatim.displayName;
 
                 /* OpenMeteo may send locations which do not match with the user input, therefore check if displayName contains the input */
-                if (StringFormat.WordContainsWord(name, userInput.text))
+                if (StringFormat.WordContainsWord(name, _userInput.text))
                 {
                     /*
                         - [...], Paris, Île-de-France, France métropolitaine, 75004, France
@@ -152,7 +152,7 @@ public class Geocoding : MonoBehaviour
                     arr = name.Split(", ");
 
                     /* Remove words before user input */
-                    firstIndex = arr.ToList().FindIndex(element => StringFormat.WordComparison(element, userInput.text));
+                    firstIndex = arr.ToList().FindIndex(element => StringFormat.WordComparison(element, _userInput.text));
                     if (firstIndex < 0)
                         continue;
                     arr = Enumerable.Reverse(arr).Take(arr.Length - firstIndex).Reverse().ToArray();
@@ -165,7 +165,7 @@ public class Geocoding : MonoBehaviour
                     name = string.Join(", ", arr);
 
                     /* Check if the input is still in the name, now that it has been reduced */
-                    if (!StringFormat.WordContainsWord(name, userInput.text))
+                    if (!StringFormat.WordContainsWord(name, _userInput.text))
                         continue;
                     /*
                         Check if the element doesn't already exist in the list 
@@ -203,30 +203,30 @@ public class Geocoding : MonoBehaviour
     private void EmptyList()
     {
         int i;
-        locationList = new List<OmgLocation>();
-        listCount.text = "0 lieu";
-        for (i = 0; i < locationListContent.childCount; ++i)
-            Destroy(locationListContent.GetChild(i).gameObject);
+        _locationList = new List<OmgLocation>();
+        _listCount.text = "0 lieu";
+        for (i = 0; i < _locationListContent.childCount; ++i)
+            Destroy(_locationListContent.GetChild(i).gameObject);
     }
 
     private void PopulateMenu(List<OmgLocation> locations)
     {
         int i;
-        locationList = locations;
+        _locationList = locations;
 
         /* Make it possible to find Null Island */
-        if (locationList.Count == 0 && StringFormat.WordComparison(userInput.text, "Null Island") || StringFormat.WordComparison(userInput.text, "Null"))
-            locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
+        if (_locationList.Count == 0 && StringFormat.WordComparison(_userInput.text, "Null Island") || StringFormat.WordComparison(_userInput.text, "Null"))
+            _locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
 
-        listCount.text = locationList.Count < 2 ? $"{locationList.Count} lieu" : $"{locationList.Count} lieux";
+        _listCount.text = _locationList.Count < 2 ? $"{_locationList.Count} lieu" : $"{_locationList.Count} lieux";
 
-        for (i = 0; i < locationList.Count; ++i)
+        for (i = 0; i < _locationList.Count; ++i)
         {
-            Transform t = Instantiate(locationListPrefab, locationListContent.position, Quaternion.identity).transform;
-            t.SetParent(locationListContent);
+            Transform t = Instantiate(_locationListPrefab, _locationListContent.position, Quaternion.identity).transform;
+            t.SetParent(_locationListContent);
             t.name = i.ToString();
             t.localScale = new Vector3(1f, 1f, 1f);
-            t.GetChild(0).GetComponent<TextMeshProUGUI>().text = locationList[i].displayName;
+            t.GetChild(0).GetComponent<TextMeshProUGUI>().text = _locationList[i].displayName;
             t.GetComponent<Button>().onClick.AddListener(() => SelectLocation(int.Parse(t.name)));
         }
 
@@ -235,9 +235,9 @@ public class Geocoding : MonoBehaviour
 
     private void SelectLocation(int index)
     {
-        StyleLocationElements(locationListContent.GetChild(index));
-        locationScript.UpdateLocation(locationList[index]);
-        GoToLocation(location.latitude, location.longitude);
+        StyleLocationElements(_locationListContent.GetChild(index));
+        _locationScript.UpdateLocation(_locationList[index]);
+        GoToLocation(_location.Latitude, _location.Longitude);
     }
 
     private void StyleLocationElements(Transform selectedElement)
@@ -246,8 +246,8 @@ public class Geocoding : MonoBehaviour
         Color blue = new Color(40f / 255f, 190f / 255f, 169f / 255f);
         int i;
 
-        for (i = 0; i < locationListContent.childCount; ++i)
-            locationListContent.GetChild(i).GetComponent<Image>().color = blue;
+        for (i = 0; i < _locationListContent.childCount; ++i)
+            _locationListContent.GetChild(i).GetComponent<Image>().color = blue;
         selectedElement.GetComponent<Image>().color = yellow;
     }
 
@@ -266,21 +266,21 @@ public class Geocoding : MonoBehaviour
             if (counter > 10)
                 break;
 
-            centerRaycast = raycast.EarthCenter();
+            centerRaycast = _raycast.EarthCenter();
             if (float.IsNaN(centerRaycast.Item1.x))
                 return;
-            centerCoords = polarCoord.CalculateCoordinates(centerRaycast.Item1);
+            centerCoords = _polarCoord.CalculateCoordinates(centerRaycast.Item1);
             centerLat = centerCoords.y;
             centerLon = centerCoords.x;
 
             diffLat = centerLat - latitude;
             diffLon = centerLon - longitude;
 
-            earth.Rotate(Camera.main.transform.right, diffLat, Space.World);
-            earth.Rotate(-Vector3.up, diffLon, Space.World);
+            _earth.Rotate(Camera.main.transform.right, diffLat, Space.World);
+            _earth.Rotate(-Vector3.up, diffLon, Space.World);
         }
         while (Mathf.Abs(diffLat) > 1f || Mathf.Abs(diffLon) > 1f);
 
-        pinManager.MovePin(centerRaycast.Item1, centerRaycast.Item2);
+        _pinManager.MovePin(centerRaycast.Item1, centerRaycast.Item2);
     }
 }

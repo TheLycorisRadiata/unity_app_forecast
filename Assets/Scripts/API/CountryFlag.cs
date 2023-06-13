@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CountryFlag : MonoBehaviour
 {
-    [SerializeField] private Image flagImage;
+    [SerializeField] private Image _flagImage;
 
     public void UpdateFlag(string countryCode)
     {
@@ -32,12 +32,12 @@ public class CountryFlag : MonoBehaviour
             }
 
             texture = DownloadHandlerTexture.GetContent(webRequest);
-            flagImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            _flagImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
     }
 
     public void ResetFlag()
     {
-        flagImage.sprite = null;
+        _flagImage.sprite = null;
     }
 }

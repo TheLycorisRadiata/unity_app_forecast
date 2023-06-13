@@ -3,18 +3,23 @@ using TMPro;
 
 public class MenuPointer : MonoBehaviour
 {
-    public static bool isPointerOnMenu = false;
-    [SerializeField] private TMP_InputField textInput;
+    public static bool IsPointerOnMenu { get; private set; }
+    [SerializeField] private TMP_InputField _geocodingTextInput;
+
+    private void Awake()
+    {
+        IsPointerOnMenu = false;
+    }
 
     public void OnPointerEnter()
     {
-        isPointerOnMenu = true;
-        textInput.interactable = true;
+        IsPointerOnMenu = true;
+        _geocodingTextInput.interactable = true;
     }
 
     public void OnPointerExit()
     {
-        isPointerOnMenu = false;
-        textInput.interactable = false;
+        IsPointerOnMenu = false;
+        _geocodingTextInput.interactable = false;
     }
 }

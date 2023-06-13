@@ -7,19 +7,19 @@ using TMPro;
 
 public class Forecast : MonoBehaviour
 {
-    [SerializeField] private LocationScriptableObject location;
-    [SerializeField] private Geocoding geocoding;
-    [SerializeField] private GameObject spinner, forecastExplanation, forecastContent;
-    private CultureInfo frFrench;
-    private DateTimeFormatInfo frenchInfo;
-    private float previousLatitude, previousLongitude;
+    [SerializeField] private LocationScriptableObject _location;
+    [SerializeField] private Geocoding _geocoding;
+    [SerializeField] private GameObject _spinner, _forecastExplanation, _forecastContent;
+    private CultureInfo _frFrench;
+    private DateTimeFormatInfo _frenchInfo;
+    private float _previousLatitude, _previousLongitude;
 
     void Start()
     {
-        frFrench = new CultureInfo("fr-FR");
-        frenchInfo = frFrench.DateTimeFormat;
-        previousLatitude = location.latitude;
-        previousLongitude = location.longitude;
+        _frFrench = new CultureInfo("fr-FR");
+        _frenchInfo = _frFrench.DateTimeFormat;
+        _previousLatitude = _location.Latitude;
+        _previousLongitude = _location.Longitude;
     }
 
     /* OnClick event */
@@ -33,34 +33,34 @@ public class Forecast : MonoBehaviour
         int[] precipitationProbabilities;
 
         /* If coordinates are unchanged, don't fetch from API */
-        if ((int)(Math.Round(location.latitude, 2) * 100) == (int)(Math.Round(previousLatitude, 2) * 100) 
-            && (int)(Math.Round(location.longitude, 2) * 100) == (int)(Math.Round(previousLongitude, 2) * 100))
+        if ((int)(Math.Round(_location.Latitude, 2) * 100) == (int)(Math.Round(_previousLatitude, 2) * 100) 
+            && (int)(Math.Round(_location.Longitude, 2) * 100) == (int)(Math.Round(_previousLongitude, 2) * 100))
         {
-            geocoding.HideGeocoding();
+            _geocoding.HideGeocoding();
             DisplayForecast();
             return;
         }
         else
         {
-            previousLatitude = location.latitude;
-            previousLongitude = location.longitude;
+            _previousLatitude = _location.Latitude;
+            _previousLongitude = _location.Longitude;
         }
 
-        geocoding.HideGeocoding();
+        _geocoding.HideGeocoding();
         HideForecast();
-        spinner.SetActive(true);
+        _spinner.SetActive(true);
 
         StartCoroutine(FetchOpenMeteoForecastData((days) =>
         {
             if (days == null || days.Length != 5 || days[0].time.Count != 4)
             {
-                spinner.SetActive(false);
+                _spinner.SetActive(false);
                 return;
             }
 
             for (i = 0; i < days.Length; ++i)
             {
-                dayElement = forecastContent.transform.Find($"Day ({i})").GetChild(0).GetComponent<TextMeshProUGUI>();
+                dayElement = _forecastContent.transform.Find($"Day ({i})").GetChild(0).GetComponent<TextMeshProUGUI>();
                 nbrYear = 0;
                 temperatures = new float[4];
                 precipitationProbabilities = new int[4];
@@ -70,7 +70,7 @@ public class Forecast : MonoBehaviour
                     if (nbrYear == 0)
                     {
                         nbrDay = days[i].time[j].Day;
-                        strMonth = frenchInfo.MonthNames[days[i].time[j].Month - 1];
+                        strMonth = _frenchInfo.MonthNames[days[i].time[j].Month - 1];
                         nbrYear = days[i].time[j].Year;
                     }
 
@@ -85,27 +85,27 @@ public class Forecast : MonoBehaviour
                 $"Minuit : {temperatures[3]}°C / {precipitationProbabilities[3]}%";
             }
 
-            spinner.SetActive(false);
+            _spinner.SetActive(false);
             DisplayForecast();
         }));
     }
 
     public void HideForecast()
     {
-        spinner.SetActive(false);
-        forecastExplanation.SetActive(false);
-        forecastContent.SetActive(false);
+        _spinner.SetActive(false);
+        _forecastExplanation.SetActive(false);
+        _forecastContent.SetActive(false);
     }
 
     public void DisplayForecast()
     {
-        forecastExplanation.SetActive(true);
-        forecastContent.SetActive(true);
+        _forecastExplanation.SetActive(true);
+        _forecastContent.SetActive(true);
     }
 
     private IEnumerator FetchOpenMeteoForecastData(Action<OmfHourly[]> callback)
     {
-        string uri = $"https://api.open-meteo.com/v1/forecast?latitude={location.latitude}&longitude={location.longitude}&hourly=temperature_2m,precipitation_probability";
+        string uri = $"https://api.open-meteo.com/v1/forecast?latitude={_location.Latitude}&longitude={_location.Longitude}&hourly=temperature_2m,precipitation_probability";
         string jsonText;
         OpenMeteoForecast forecast;
 
@@ -124,7 +124,7 @@ public class Forecast : MonoBehaviour
 
             if (forecast.error == true)
             {
-                Debug.LogWarning($"Forecast error: The request went through but the API couldn't find any data at these coordinates ({location.latitude},{location.longitude}).");
+                Debug.LogWarning($"Forecast error: The request went through but the API couldn't find any data at these coordinates ({_location.Latitude},{_location.Longitude}).");
                 yield break;
             }
 

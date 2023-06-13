@@ -3,31 +3,31 @@ using UnityEngine;
 
 public class EarthAnimator : MonoBehaviour
 {
-    private float distance = 45f;
-    private Vector3 fixRotation;
-    private float duration = 2f;
-    private bool earthMoved = false;
-    private Vector3 earthInitialPosition, earthOpenPosition;
+    private float _distance = 45f;
+    private Vector3 _fixRotation;
+    private float _duration = 2f;
+    private bool _earthMoved = false;
+    private Vector3 _earthInitialPosition, _earthOpenPosition;
 
     void Start()
     {
-        fixRotation = new Vector3(0f, distance / 3, 0f);
-        earthInitialPosition = transform.position;
-        earthOpenPosition = earthInitialPosition + Vector3.left * distance;
+        _fixRotation = new Vector3(0f, _distance / 3, 0f);
+        _earthInitialPosition = transform.position;
+        _earthOpenPosition = _earthInitialPosition + Vector3.left * _distance;
     }
 
     public void MoveEarth()
     {
         StopAllCoroutines();
-        if (!earthMoved)
+        if (!_earthMoved)
         {
-            StartCoroutine(ShiftEarth(earthOpenPosition));
+            StartCoroutine(ShiftEarth(_earthOpenPosition));
         }
         else
         {
-            StartCoroutine(ShiftEarth(earthInitialPosition));
+            StartCoroutine(ShiftEarth(_earthInitialPosition));
         }
-        earthMoved = !earthMoved;
+        _earthMoved = !_earthMoved;
     }
 
     private IEnumerator ShiftEarth(Vector3 targetPosition)
@@ -40,12 +40,12 @@ public class EarthAnimator : MonoBehaviour
             To make it so it doesn't visually change, for a distance of 45, do: rotY - 15.
         */
         Vector3 startRotation = transform.eulerAngles;
-        Vector3 targetRotation = transform.eulerAngles - fixRotation;
+        Vector3 targetRotation = transform.eulerAngles - _fixRotation;
 
-        while (timeElapsed < duration)
+        while (timeElapsed < _duration)
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / duration);
-            transform.eulerAngles = Vector3.Lerp(startRotation, targetRotation, timeElapsed / duration);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / _duration);
+            transform.eulerAngles = Vector3.Lerp(startRotation, targetRotation, timeElapsed / _duration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

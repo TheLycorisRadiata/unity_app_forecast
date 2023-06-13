@@ -1,50 +1,61 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class PinManager : MonoBehaviour
 {
-    [SerializeField] private Raycast raycast;
+    [SerializeField] private InputActionReference _fireValue;
+    [SerializeField] private Raycast _raycast;
+    [SerializeField] private LocationScriptableObjectScript _locationScript;
+    [SerializeField] private Transform _earthModel;
 
-    private GameObject pin;
-    [SerializeField] private GameObject pinPrefab;
-    private bool isPinned = false;
+    private GameObject _pin;
+    [SerializeField] private GameObject _pinPrefab;
+    private bool _isPinned = false;
 
-    [SerializeField] private Transform earthModel;
-    [SerializeField] private LocationScriptableObjectScript locationScript;
-    [SerializeField] private UnityEvent OpenMenu;
+    [SerializeField] private UnityEvent _openMenu;
+    /* PanelOpener.OpenPanel + EarthAnimator.MoveEarth */
 
-    void Update()
+    private void OnEnable()
     {
-        if (UserInput.click && raycast.hasHit && !MenuPointer.isPointerOnMenu)
+        _fireValue.action.started += OnFire;
+    }
+
+    private void OnDisable()
+    {
+        _fireValue.action.started -= OnFire;
+    }
+
+    private void OnFire(InputAction.CallbackContext action)
+    {
+        if (_raycast.HasHit && !MenuPointer.IsPointerOnMenu)
         {
-            if (!isPinned)
+            if (!_isPinned)
             {
-                CreatePin(raycast.point, raycast.rotation);
-                locationScript.UpdateLocation(raycast.point);
-                OpenMenu.Invoke();
+                CreatePin(_raycast.Point, _raycast.Rotation);
+                _locationScript.UpdateLocation(_raycast.Point);
+                _openMenu.Invoke();
             }
             else
             {
-                MovePin(raycast.point, raycast.rotation);
-                locationScript.UpdateLocation(raycast.point);
+                MovePin(_raycast.Point, _raycast.Rotation);
+                _locationScript.UpdateLocation(_raycast.Point);
             }
-
-            UserInput.click = false;
         }
     }
 
     public void CreatePin(Vector3 raycastPoint, Quaternion raycastRotation)
     {
-        pin = Instantiate(pinPrefab, raycastPoint, raycastRotation, earthModel);
-        pin.SetActive(true);
-        isPinned = true;
+        _pin = Instantiate(_pinPrefab, raycastPoint, raycastRotation, _earthModel);
+        _pin.SetActive(true);
+        _isPinned = true;
     }
 
     public void MovePin(Vector3 raycastPoint, Quaternion raycastRotation)
     {
-        pin.SetActive(false);
-        pin.transform.position = raycastPoint;
-        pin.transform.rotation = raycastRotation;
-        pin.SetActive(true);
+        _pin.SetActive(false);
+        _pin.transform.position = raycastPoint;
+        _pin.transform.rotation = raycastRotation;
+        _pin.SetActive(true);
     }
 }

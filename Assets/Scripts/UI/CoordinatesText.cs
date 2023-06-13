@@ -4,12 +4,12 @@ using TMPro;
 
 public class CoordinatesText : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI latitude;
-    [SerializeField] private TextMeshProUGUI longitude;
+    [SerializeField] private TextMeshProUGUI _latitude;
+    [SerializeField] private TextMeshProUGUI _longitude;
     
     public void CoordinatesTextUpdate(float fLatitude, float fLongitude)
     {
-        latitude.text = "Latitude: " + (float)Math.Round(fLatitude, 2);
-        longitude.text = "Longitude: " + (float)Math.Round(fLongitude, 2);
+        _latitude.text = "Latitude: " + (float)Math.Round(fLatitude, 2);
+        _longitude.text = "Longitude: " + (float)Math.Round(fLongitude, 2);
     }
 }

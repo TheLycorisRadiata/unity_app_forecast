@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PolarCoordinates : MonoBehaviour
 {
-    private Transform earthModel;
+    private Transform _earthModel;
 
     void Awake()
     {
-        earthModel = transform.GetChild(0);
+        _earthModel = transform.GetChild(0);
     }
 
     /* y is latitude and x is longitude */
@@ -26,7 +26,7 @@ public class PolarCoordinates : MonoBehaviour
 
     private Vector3 CalculateCartesianCoordinates(Vector3 raycastPoint)
     {
-        return earthModel.InverseTransformPoint(raycastPoint);
+        return _earthModel.InverseTransformPoint(raycastPoint);
     }
 
     private Vector3 CalculateSphericalCoordinates(Vector3 cartesianCoordinates)

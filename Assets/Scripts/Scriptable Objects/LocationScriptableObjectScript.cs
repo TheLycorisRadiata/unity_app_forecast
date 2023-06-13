@@ -4,20 +4,20 @@ using TMPro;
 
 public class LocationScriptableObjectScript : MonoBehaviour
 {
-    [SerializeField] private LocationScriptableObject location;
-    [SerializeField] private PolarCoordinates polarCoordinates;
-    [SerializeField] private ReverseGeocoding reverseGeocoding;
+    [SerializeField] private LocationScriptableObject _location;
+    [SerializeField] private PolarCoordinates _polarCoordinates;
+    [SerializeField] private ReverseGeocoding _reverseGeocoding;
 
     /* To update the menu */
-    [SerializeField] private CoordinatesText coordinatesText;
-    [SerializeField] private CountryFlag countryFlag;
-    [SerializeField] private TextMeshProUGUI menuLocationName;
-    private string menuLocationNameDefault;
+    [SerializeField] private CoordinatesText _coordinatesText;
+    [SerializeField] private CountryFlag _countryFlag;
+    [SerializeField] private TextMeshProUGUI _menuLocationName;
+    private string _menuLocationNameDefault;
 
     void Start()
     {
         ResetLocationData();
-        menuLocationNameDefault = menuLocationName.text;
+        _menuLocationNameDefault = _menuLocationName.text;
     }
 
     public void UpdateLocation(Vector3 raycastPoint)
@@ -29,48 +29,48 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
     public void UpdateLocation(OmgLocation geolocation)
     {
-        location.locationName = geolocation.displayName;
-        menuLocationName.text = location.locationName;
+        _location.LocationName = geolocation.displayName;
+        _menuLocationName.text = _location.LocationName;
         UpdateLocationCoordinates(geolocation.latitude, geolocation.longitude);
         UpdateCountryCode(geolocation.countryCode);
     }
 
     private void ResetLocationData()
     {
-        location.locationName = null;
-        location.latitude = 0f;
-        location.longitude = 0f;
-        location.countryCode = null;
+        _location.LocationName = null;
+        _location.Latitude = 0f;
+        _location.Longitude = 0f;
+        _location.CountryCode = null;
     }
 
     private void UpdateLocationCoordinates(Vector3 raycastPoint)
     {
-        Vector2 coord = polarCoordinates.CalculateCoordinates(raycastPoint);
-        location.latitude = coord.y;
-        location.longitude = coord.x;
-        coordinatesText.CoordinatesTextUpdate(location.latitude, location.longitude);
+        Vector2 coord = _polarCoordinates.CalculateCoordinates(raycastPoint);
+        _location.Latitude = coord.y;
+        _location.Longitude = coord.x;
+        _coordinatesText.CoordinatesTextUpdate(_location.Latitude, _location.Longitude);
     }
 
     private void UpdateLocationCoordinates(float latitude, float longitude)
     {
-        location.latitude = latitude;
-        location.longitude = longitude;
-        coordinatesText.CoordinatesTextUpdate(latitude, longitude);
+        _location.Latitude = latitude;
+        _location.Longitude = longitude;
+        _coordinatesText.CoordinatesTextUpdate(latitude, longitude);
     }
 
     private void UpdateLocationNameAndCountryCode()
     {
-        StartCoroutine(reverseGeocoding.FetchNominatimData(location.latitude, location.longitude, (nominatim) =>
+        StartCoroutine(_reverseGeocoding.FetchNominatimData(_location.Latitude, _location.Longitude, (nominatim) =>
         {
             if (nominatim == null)
             {
-                countryFlag.ResetFlag();
-                menuLocationName.text = menuLocationNameDefault;
+                _countryFlag.ResetFlag();
+                _menuLocationName.text = _menuLocationNameDefault;
                 return;
             }
             else if (nominatim.osmType == "node" && nominatim.osmId == "3815077900")
             {
-                location.locationName = "Null Island";
+                _location.LocationName = "Null Island";
                 return;
             }
 
@@ -81,24 +81,24 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
     private void UpdateCountryCode(string countryCode)
     {
-        location.countryCode = countryCode;
-        countryFlag.UpdateFlag(location.countryCode);
+        _location.CountryCode = countryCode;
+        _countryFlag.UpdateFlag(_location.CountryCode);
     }
 
     private void UpdateLocationName(Nominatim nominatim)
     {
         string countryName = nominatim.address.country;
-        location.locationName = reverseGeocoding.GetLocationNameFromNominatimData(nominatim.address.otherData);
+        _location.LocationName = _reverseGeocoding.GetLocationNameFromNominatimData(nominatim.address.otherData);
 
         // If no location name has been found in the Nominatim API, or there is at least one non-latin character in the string
-        if (location.locationName == null || !Regex.IsMatch(location.locationName, "[a-z]", RegexOptions.IgnoreCase))
+        if (_location.LocationName == null || !Regex.IsMatch(_location.LocationName, "[a-z]", RegexOptions.IgnoreCase))
         {
-            StartCoroutine(reverseGeocoding.FetchNameTranslationFromOSM(nominatim.osmType, nominatim.osmId, (translation) =>
+            StartCoroutine(_reverseGeocoding.FetchNameTranslationFromOSM(nominatim.osmType, nominatim.osmId, (translation) =>
             {
-                if (location.locationName == null && translation == null)
+                if (_location.LocationName == null && translation == null)
                     return;
                 else if (translation != null)
-                    location.locationName = translation;
+                    _location.LocationName = translation;
 
                 // The location name is either non-latin or a translation, so you can add the country name
                 if (countryName != null)
@@ -111,7 +111,7 @@ public class LocationScriptableObjectScript : MonoBehaviour
 
     private void SetLocationName(string countryName)
     {
-        location.locationName += ", " + countryName;
-        menuLocationName.text = location.locationName;
+        _location.LocationName += ", " + countryName;
+        _menuLocationName.text = _location.LocationName;
     }
 }

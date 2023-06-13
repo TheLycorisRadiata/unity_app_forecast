@@ -4,18 +4,20 @@ using TMPro;
 
 public class TextInput : MonoBehaviour
 {
-    private TMP_InputField component;
-    [SerializeField] private UnityEvent validation;
+    private TMP_InputField _component;
+
+    [SerializeField] private UnityEvent _validation;
+    /* Geocoding.FetchLocationList */
 
     void Awake()
     {
-        component = GetComponent<TMP_InputField>();
+        _component = GetComponent<TMP_InputField>();
 
         /* Make sure the input field's Line Type property is set to "Multi Line Newline" */
-        component.lineType = TMP_InputField.LineType.MultiLineNewline;
-        component.lineLimit = 1;
+        _component.lineType = TMP_InputField.LineType.MultiLineNewline;
+        _component.lineLimit = 1;
         /* Then pass the DetectNewLine() method */
-        component.onValueChanged.AddListener(DetectNewLine);
+        _component.onValueChanged.AddListener(DetectNewLine);
 
         /*
             Note that the OnEndEdit event is not used because it's not only triggered when the user types a newline (typically the "Enter" key), 
@@ -40,9 +42,9 @@ public class TextInput : MonoBehaviour
             if (value[i] == '\n')
             {
                 /* Remove the newline for aesthetic purposes */
-                component.text = value.Remove(i, 1);
+                _component.text = value.Remove(i, 1);
                 /* Newline means "Validate", so call the methods */
-                validation.Invoke();
+                _validation.Invoke();
                 return;
             }
         }

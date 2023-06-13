@@ -2,25 +2,32 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    private Transform cam;
-    private float rotateSpeed = 20f;
+    private Transform _cam;
+    private float _rotateSpeed = 20f;
 
     void Awake()
     {
-        cam = Camera.main.transform;
+        _cam = Camera.main.transform;
     }
 
     void FixedUpdate()
     {
-        if (MenuPointer.isPointerOnMenu)
+        if (MenuPointer.IsPointerOnMenu)
             return;
 
-        // horizontal --> rotation around X
-        float pitch = UserInput.movementVector.x * rotateSpeed * Time.deltaTime;
-        // vertical --> rotation around Y
-        float yaw = UserInput.movementVector.y * rotateSpeed * Time.deltaTime;
+        transform.Rotate(-Vector3.up, GetPitch(), Space.World);
+        transform.Rotate(_cam.right, GetYaw(), Space.World);
+    }
 
-        transform.Rotate(-Vector3.up, pitch, Space.World);
-        transform.Rotate(cam.right, yaw, Space.World);
+    private float GetPitch()
+    {
+        // horizontal --> rotation around X
+        return UserInput.MovementVector.x * _rotateSpeed * Time.deltaTime;
+    }
+
+    private float GetYaw()
+    {
+        // vertical --> rotation around Y
+        return UserInput.MovementVector.y * _rotateSpeed * Time.deltaTime;
     }
 }
