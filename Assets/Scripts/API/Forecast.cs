@@ -79,10 +79,10 @@ public class Forecast : MonoBehaviour
                 }
 
                 dayElement.text = $"<u>{nbrDay} {strMonth} {nbrYear}</u>\n\n" + 
-                $"6H : {temperatures[0]}캜 / {precipitationProbabilities[0]}%\n" + 
-                $"Midi : {temperatures[1]}캜 / {precipitationProbabilities[1]}%\n" + 
-                $"18H : {temperatures[2]}캜 / {precipitationProbabilities[2]}%\n" + 
-                $"Minuit : {temperatures[3]}캜 / {precipitationProbabilities[3]}%";
+                $"6H : {temperatures[0]}째C / {precipitationProbabilities[0]}%\n" + 
+                $"Midi : {temperatures[1]}째C / {precipitationProbabilities[1]}%\n" + 
+                $"18H : {temperatures[2]}째C / {precipitationProbabilities[2]}%\n" + 
+                $"Minuit : {temperatures[3]}째C / {precipitationProbabilities[3]}%";
             }
 
             _spinner.SetActive(false);
