@@ -9,7 +9,7 @@ public class TextInput : MonoBehaviour
     [SerializeField] private UnityEvent _validation;
     /* Geocoding.FetchLocationList */
 
-    void Awake()
+    private void Awake()
     {
         _component = GetComponent<TMP_InputField>();
 
@@ -20,17 +20,23 @@ public class TextInput : MonoBehaviour
         _component.onValueChanged.AddListener(DetectNewLine);
 
         /*
-            Note that the OnEndEdit event is not used because it's not only triggered when the user types a newline (typically the "Enter" key), 
-            but also when the input field is out of focus, so for example when the user clicks outside of the field. This causes the event methods  
-            to be called again, for nothing. Therefore I've implemented my own solution.
+            Note that the OnEndEdit event is not used because it's not only triggered when 
+            the user types a newline (typically the "Enter" key), but also when the input 
+            field is out of focus, so for example when the user clicks outside of the field. 
+            This causes the event methods to be called again, for nothing. Therefore I've 
+            implemented my own solution.
 
-            Basically, the input is a "multi line" with the newline not being seen as validation, but as a mere newline. Then, whenever there's a 
-            change in input, I check the characters to see if a newline has been entered. Of course, the check starts from the end of the string, 
-            because we're interested in newly added characters. If a newline has been detected, the event methods are called.
+            Basically, the input is a "multi line" with the newline not being seen as 
+            validation, but as a mere newline. Then, whenever there's a change in input, 
+            I check the characters to see if a newline has been entered. Of course, the 
+            check starts from the end of the string, because we're interested in newly 
+            added characters. If a newline has been detected, the event methods are called.
 
-            The only downside to this method is that, when the user types in a newline, they would see the input on different lines instead of 
-            just one (since it's "multi line") and style-wise it's not desired. Which is why when the newline is detected I immediately update 
-            the input to remove it. It's seamless and the user doesn't notice a thing.
+            The only downside to this method is that, when the user types in a newline, 
+            they would see the input on different lines instead of just one (since it's 
+            "multi line") and style-wise it's not desired. Which is why when the newline 
+            is detected I immediately update the input to remove it. It's seamless and the 
+            user doesn't notice a thing.
         */
     }
 

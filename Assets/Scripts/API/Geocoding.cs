@@ -74,7 +74,7 @@ public class Geocoding : MonoBehaviour
     private IEnumerator FetchOpenMeteoGeocodingData(Action<List<OmgLocation>> callback)
     {
         string encodedInput = HttpUtility.UrlEncode(_userInput.text);
-        string uri = $"https://geocoding-api.open-meteo.com/v1/search?name={encodedInput}&language=fr";
+        string uri = $"https://geocoding-api.open-meteo.com/v1/search?name={encodedInput}&language=en";
         string jsonText;
         OpenMeteoGeocoding geocoding;
 
@@ -116,7 +116,7 @@ public class Geocoding : MonoBehaviour
         {
             latitude = StringFormat.Float(locations[i].latitude);
             longitude = StringFormat.Float(locations[i].longitude);
-            uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=fr,en&format=json";
+            uri = $"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&accept-language=en&format=json";
 
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
@@ -204,7 +204,7 @@ public class Geocoding : MonoBehaviour
     {
         int i;
         _locationList = new List<OmgLocation>();
-        _listCount.text = "0 lieu";
+        _listCount.text = "0 location";
         for (i = 0; i < _locationListContent.childCount; ++i)
             Destroy(_locationListContent.GetChild(i).gameObject);
     }
@@ -218,7 +218,7 @@ public class Geocoding : MonoBehaviour
         if (_locationList.Count == 0 && StringFormat.WordComparison(_userInput.text, "Null Island") || StringFormat.WordComparison(_userInput.text, "Null"))
             _locationList.Add(new OmgLocation(0f, 0f, null, "Null Island"));
 
-        _listCount.text = _locationList.Count < 2 ? $"{_locationList.Count} lieu" : $"{_locationList.Count} lieux";
+        _listCount.text = _locationList.Count < 2 ? $"{_locationList.Count} location" : $"{_locationList.Count} locations";
 
         for (i = 0; i < _locationList.Count; ++i)
         {

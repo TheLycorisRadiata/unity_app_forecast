@@ -14,7 +14,7 @@ public class LocationScriptableObjectScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _menuLocationName;
     private string _menuLocationNameDefault;
 
-    void Start()
+    private void Start()
     {
         ResetLocationData();
         _menuLocationNameDefault = _menuLocationName.text;

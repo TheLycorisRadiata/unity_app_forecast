@@ -1,4 +1,4 @@
-# Weather Forecast
+# 3D Weather Forecast
 
 3D weather forecast app with a rotative Earth made with Unity.
 

@@ -10,14 +10,12 @@ public class Forecast : MonoBehaviour
     [SerializeField] private LocationScriptableObject _location;
     [SerializeField] private Geocoding _geocoding;
     [SerializeField] private GameObject _spinner, _forecastExplanation, _forecastContent;
-    private CultureInfo _frFrench;
-    private DateTimeFormatInfo _frenchInfo;
+    private DateTimeFormatInfo _englishInfo;
     private float _previousLatitude, _previousLongitude;
 
-    void Start()
+    private void Start()
     {
-        _frFrench = new CultureInfo("fr-FR");
-        _frenchInfo = _frFrench.DateTimeFormat;
+        _englishInfo = new CultureInfo("en-US").DateTimeFormat;
         _previousLatitude = _location.Latitude;
         _previousLongitude = _location.Longitude;
     }
@@ -28,6 +26,7 @@ public class Forecast : MonoBehaviour
         int i, j;
         TextMeshProUGUI dayElement;
         int nbrDay = 0, nbrYear = 0;
+        string strDayEnding = "";
         string strMonth = "";
         float[] temperatures;
         int[] precipitationProbabilities;
@@ -70,7 +69,11 @@ public class Forecast : MonoBehaviour
                     if (nbrYear == 0)
                     {
                         nbrDay = days[i].time[j].Day;
-                        strMonth = _frenchInfo.MonthNames[days[i].time[j].Month - 1];
+                        strDayEnding = nbrDay == 1 || nbrDay == 21 || nbrDay == 31 ? "st" 
+                                     : nbrDay == 2 || nbrDay == 22 ? "nd" 
+                                     : nbrDay == 3 || nbrDay == 23 ? "rd" 
+                                     : "th";
+                        strMonth = _englishInfo.MonthNames[days[i].time[j].Month - 1];
                         nbrYear = days[i].time[j].Year;
                     }
 
@@ -78,11 +81,11 @@ public class Forecast : MonoBehaviour
                     precipitationProbabilities[j] = days[i].precipitationProbability[j];
                 }
 
-                dayElement.text = $"<u>{nbrDay} {strMonth} {nbrYear}</u>\n\n" + 
-                $"6H : {temperatures[0]}°C / {precipitationProbabilities[0]}%\n" + 
-                $"Midi : {temperatures[1]}°C / {precipitationProbabilities[1]}%\n" + 
-                $"18H : {temperatures[2]}°C / {precipitationProbabilities[2]}%\n" + 
-                $"Minuit : {temperatures[3]}°C / {precipitationProbabilities[3]}%";
+                dayElement.text = $"<u>{strMonth} {nbrDay}{strDayEnding} {nbrYear}</u>\n\n" + 
+                $"6 AM: {temperatures[0]}°C / {precipitationProbabilities[0]}%\n" + 
+                $"Noon: {temperatures[1]}°C / {precipitationProbabilities[1]}%\n" + 
+                $"6 PM: {temperatures[2]}°C / {precipitationProbabilities[2]}%\n" + 
+                $"Midnight: {temperatures[3]}°C / {precipitationProbabilities[3]}%";
             }
 
             _spinner.SetActive(false);

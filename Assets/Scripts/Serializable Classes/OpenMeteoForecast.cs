@@ -67,7 +67,7 @@ public class OpenMeteoForecast
 public class OmfHourly
 {
     public List<DateTime> time; /* Default: UTC and strings in ISO8601 format */
-    [JsonProperty("temperature_2m")] public List<float> temperature; /* °C */
+    [JsonProperty("temperature_2m")] public List<float> temperature; /* Â°C */
     [JsonProperty("precipitation_probability")] public List<int> precipitationProbability; /* % */
 
     public OmfHourly()

@@ -11,10 +11,10 @@ public class ReverseGeocoding : MonoBehaviour
 {
     public IEnumerator FetchNominatimData(float latitude, float longitude, Action<Nominatim> callback)
     {
-        // Depending on the user's language, the dot in the float will become a comma when inserted in a string
+        // Depending on the user machine's language, the dot in the float will become a comma when inserted in a string
         string strLatitude = StringFormat.Float(latitude);
         string strLongitude = StringFormat.Float(longitude);
-        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={strLatitude}&lon={strLongitude}&accept-language=fr,en&format=json";
+        string uri = $"https://nominatim.openstreetmap.org/reverse?lat={strLatitude}&lon={strLongitude}&accept-language=en&format=json";
 
         string jsonText;
         Nominatim nominatim;
@@ -104,13 +104,11 @@ public class ReverseGeocoding : MonoBehaviour
 
     private string GetTranslation(List<TagOSM> tags)
     {
-        string french = null, english = null, international = null, native = null;
+        string english = null, international = null, native = null;
 
         foreach (TagOSM tag in tags)
         {
-            if (tag.name == "name:fr")
-                french = tag.value;
-            else if (tag.name == "name:en")
+            if (tag.name == "name:en")
                 english = tag.value;
             else if (tag.name == "int_name")
                 international = tag.value;
@@ -118,6 +116,6 @@ public class ReverseGeocoding : MonoBehaviour
                 native = tag.value;
         }
 
-        return french ?? english ?? international ?? native;
+        return english ?? international ?? native;
     }
 }

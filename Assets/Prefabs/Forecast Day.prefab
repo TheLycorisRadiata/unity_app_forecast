@@ -66,8 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<u>30 Septembre 2023</u>\n\n6H : -40.0\xB0C / 100%\nMidi : -40.0\xB0C
-    / 100%\n18H : -40.0\xB0C / 100%\nMinuit : -40.0\xB0C / 100%"
+  m_text: "<u>September 30th 2023</u>\n\n6 AM: -40.0\xB0C / 100%\nNoon: -40.0\xB0C
+    / 100%\n6 PM: -40.0\xB0C / 100%\nMidnight: -40.0\xB0C / 100%"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -173,7 +173,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 375, y: 265}
+  m_SizeDelta: {x: 400, y: 265}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &960064124111730822
 CanvasRenderer:
